@@ -8,7 +8,7 @@ use vars qw($VERSION);
 use Locale::Object::Country;
 use Locale::Object::DB;
 
-$VERSION = "0.1";
+$VERSION = "0.11";
 
 my $db = Locale::Object::DB->new();
 
@@ -232,7 +232,7 @@ Locale::Object::Language - language information objects
 
 =head1 VERSION
 
-0.1
+0.11
 
 =head1 DESCRIPTION
 
@@ -276,7 +276,7 @@ These methods retrieve the values of the attributes in the object whose name the
 
     print $eng->official($gb);  # prints 'true'
 
-Give this method a L<Locale::Object::Country> object, and it will return a 'true' or 'false' value for whether the country the object represents has the language represented by your C<Locale::Object::Language> object as an official language.
+Give this method a L<Locale::Object::Country> object, and it will return a 'true' or 'false' value for whether the country the object represents has the language represented by your C<Locale::Object::Language> object as an official language. See L<Locale::Object::DB::Schemata> for a note about languages in the database.
 
 =head1 KNOWN BUGS
 

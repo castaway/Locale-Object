@@ -1,5 +1,10 @@
+2003-12-18: 0.51
+            * Slight documentation patch.
+
 2003-12-17: 0.5
             * Added new module: Locale::Object::Currency::Converter.
+
+2003-12-16: 0.41
             * Added UTC offset data to the db.
             * Added utc_offset_main() and utc_offsets_all() to Country.pm.
             * Added a few more tests to bring subroutine coverage to 100%.
