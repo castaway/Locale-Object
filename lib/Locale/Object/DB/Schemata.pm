@@ -4,7 +4,7 @@ use strict;
 use warnings::register;
 use vars qw($VERSION);
 
-$VERSION = "0.3";
+$VERSION = "0.31";
 
 # DO NOT LEAVE IT IS NOT REAL
 
@@ -23,7 +23,7 @@ Locale::Object::DB::Schemata - schema documentation for the Locale::Object datab
 
 =head1 VERSION
 
-0.3
+0.31
 
 =head1 DESCRIPTION
 
@@ -41,6 +41,8 @@ The database of locale information used by the Locale::Object modules uses L<DBD
         code_numeric          smallint,
         name                  char(100),
         dialing_code          smallint,
+        utc_offset_main       char(5),
+        utc_offsets_all       char(50),
         PRIMARY KEY           (code_alpha2)
     );
 
@@ -49,6 +51,8 @@ The database of locale information used by the Locale::Object modules uses L<DBD
 * C<code_alpha2> , C<code_alpha3>, C<code_numeric> and C<name> are data from ISO 3166 - see L<http://ftp.ics.uci.edu/pub/ietf/http/related/iso3166.txt>.
 
 * C<dialing_code> is an International Direct Dialing code - see L<http://kropla.com/dialcode.htm>.
+
+* C<utc_offset_main> is the time offset of the time zone of the country's capital from UTC, expressed decimally in hours. C<utc_offsets_all> is a comma-separated list of offsets for all time zones that the country falls across, listed from west to east. If there is only one value this will match C<utc_offset_main>.
 
 =back
 

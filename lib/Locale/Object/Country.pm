@@ -10,7 +10,7 @@ use Locale::Object::Currency;
 use Locale::Object::Continent;
 use Locale::Object::Language;
 
-$VERSION = "0.3";
+$VERSION = "0.31";
 
 my $db = Locale::Object::DB->new();
 
@@ -43,7 +43,7 @@ sub init
   
   # Make a hash of valid parameters.
   my %allowed_params = map { $_ => undef }
-    qw(code_alpha2 code_alpha3 code_numeric name);
+    qw(code_alpha2 code_alpha3 code_numeric name utc_offset_main utc_offsets_all);
   
   # Go no further if the specified parameter wasn't one.
   croak "Error: You can only specify a country name, alpha2 code, alpha3 code or numeric code for initialization." unless exists $allowed_params{$parameter};
@@ -67,13 +67,15 @@ sub init
   my $code_numeric          = @{$result}[0]->{'code_numeric'}; 
   my $name                  = @{$result}[0]->{'name'};
   my $dialing_code          = @{$result}[0]->{'dialing_code'};
+  my $utc_offset_main       = @{$result}[0]->{'utc_offset_main'};
+  my $utc_offsets_all       = @{$result}[0]->{'utc_offsets_all'};
 
   # Check for pre-existing objects. Return it if there is one.
   my $country = $self->exists($code_alpha2);
   return $country if $country;
 
   # If not, make a new object.
-  _make_country($self, $code_alpha2, $code_alpha3, $code_numeric, $name, $dialing_code);
+  _make_country($self, $code_alpha2, $code_alpha3, $code_numeric, $name, $dialing_code, $utc_offset_main, $utc_offsets_all);
   
   # Register the new object.
   $self->register();
@@ -114,7 +116,7 @@ sub _make_country
   my $code = $attributes[0];
 
   # The attributes we want to set.
-  my @attr_names = qw(_code_alpha2 _code_alpha3 _code_numeric _name _dialing_code);
+  my @attr_names = qw(_code_alpha2 _code_alpha3 _code_numeric _name _dialing_code _utc_offset_main _utc_offsets_all);
   
   # Initialize a loop counter.
   my $counter = 0;
@@ -157,9 +159,14 @@ sub languages
   _set_languages($self) unless $self->{_languages};
 
   # Give an array if requested in array context, otherwise a reference.    
-  return @{$self->{_languages}} if wantarray;
-  return $self->{_languages};
-  
+  if (wantarray)
+  {
+    return @{$self->{_languages}};
+  }
+  else
+  {
+    return $self->{_languages};
+  }
 }
 
 # Private method to set an attribute with an array of objects for all languages spoken in this country.
@@ -235,6 +242,17 @@ sub name
   $self->{_name};
 }  
 
+sub utc_offset_main
+{
+  my $self = shift;  
+  $self->{_utc_offset_main};
+}  
+
+sub utc_offsets_all
+{
+  my $self = shift;  
+  $self->{_utc_offsets_all};
+}  
 
 1;
 
@@ -246,7 +264,7 @@ Locale::Object::Country - country information objects
 
 =head1 VERSION
 
-0.3
+0.31
 
 =head1 DESCRIPTION
 
@@ -277,11 +295,11 @@ The C<new> method creates an object. It takes a single-item hash as an argument 
 
 The objects created are singletons; if you try and create a country object when one matching your specification already exists, C<new()> will return the original one.
 
-=head2 C<code_alpha2(), code_alpha(), code_numeric(), name(), dialing_code()>
+=head2 C<code_alpha2(), code_alpha(), code_numeric(), name(), dialing_code(), utc_offset_main(), utc_offsets_all()>
 
     my $name = $country->name;
     
-These methods retrieve the values of the attributes in the object whose name they share.
+These methods retrieve the values of the attributes whose name they share in the object.
 
 =head2 C<currency(), continent()>
 

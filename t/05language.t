@@ -29,7 +29,7 @@ my $count = scalar @countries;
 #5
 is( $count, 86, 'the number of countries sharing it is correct');
 
-my $copy = Locale::Object::Language->new( code_alpha3 => 'eng' );
+my $copy = Locale::Object::Language->new( code_alpha2 => 'en' );
 
 #6
 ok( $copy eq $eng, 'the object is a singleton');
