@@ -1,9 +1,9 @@
 #!/usr/bin/perl
 
-use warnings;
+use warnings::register;
 use strict;
 
-use Test::More tests => 10;
+use Test::More tests => 8;
 
 use Locale::Object::Currency;
 use Locale::Object::Currency::Converter;
@@ -12,12 +12,6 @@ my $usd = Locale::Object::Currency->new( code => 'USD' );
 my $gbp = Locale::Object::Currency->new( code => 'GBP' );
 my $eur = Locale::Object::Currency->new( code => 'EUR' );
 my $jpy = Locale::Object::Currency->new( code => 'JPY' );
-
-#1
-require_ok('Finance::Currency::Convert::Yahoo');
-
-#2
-require_ok('Finance::Currency::Convert::XE');
   
 my $converter = Locale::Object::Currency::Converter->new(
                                                        from    => $usd,
@@ -25,11 +19,10 @@ my $converter = Locale::Object::Currency::Converter->new(
                                                        service => 'XE'
                                                       );
 
-#3
+#1
 isa_ok( $converter, 'Locale::Object::Currency::Converter');
 
 my $amount = 5;
-my $result = $converter->convert($amount);
 
 # "Test" a conversion - output a test result, but don't fail if it
 # doesn't work. This is because Finance::Currency::Convert::XE and 
@@ -37,42 +30,54 @@ my $result = $converter->convert($amount);
 # network conditions. We want to indicate success/failure but not actually
 # kill the tests.
 
-#4
-if (defined $result)
+SKIP:
 {
-  pass('An XE conversion worked');
-}
-else
-{
-  pass('An XE conversion was not successful, this may be due to transient network conditions');
+  skip 'Finance::Currency::Convert::XE not installed', 1 unless $converter->use_xe == 1;
+
+  my $result = $converter->convert($amount);
+
+  #2
+  if (defined $result && $result !~ /ERROR/)
+  {
+    pass('An XE conversion worked');
+  }
+  else
+  {
+    pass('An XE conversion was not successful, this may be due to transient network conditions');
+  }
 }
 
-#5
+#3
 ok( $converter->service('Yahoo'), 'Resetting currency service worked' );
 
-#6
+#4
 ok( $converter->from($eur), "Resetting 'from' currency worked" );
 
-#7
+#5
 ok( $converter->to($jpy), "Resetting 'to' currency worked" );
 
-$result = $converter->convert($amount);
-
-# More "tests" - see note above.
-
-#8
-if (defined $result)
+SKIP:
 {
-  pass('A Yahoo! conversion worked');
-}
-else
-{
-  pass('A Yahoo! conversion was not successful, this may be due to transient network conditions');
+  skip 'Finance::Currency::Convert::Yahoo not installed', 1 unless $converter->use_yahoo == 1;
+
+  my $result = $converter->convert($amount);
+  
+  # More "tests" - see note above.
+  
+  #6
+  if (defined $result && $result !~ /ERROR/)
+  {
+    pass('A Yahoo! conversion worked');
+  }
+  else
+  {
+    pass('A Yahoo! conversion was not successful, this may be due to transient network conditions');
+  }
 }
  
 my $rate = $converter->rate;
  
-#9
+#7
 if (defined $rate)
 {
   pass('A conversion rate was found');
@@ -84,7 +89,7 @@ else
   
 my $timestamp = $converter->timestamp;
   
-#10
+#8
 if (defined $timestamp)
 {
   pass('A rate timestamp was found');

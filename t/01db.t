@@ -1,19 +1,16 @@
 #!/usr/bin/perl
 
-use warnings;
+use warnings::register;
 use strict;
 
-use Test::More tests => 4;
+use Test::More tests => 3;
 
 use Locale::Object::DB;
 
 my $db = Locale::Object::DB->new();
                                       
 #1
-ok( defined $db, 'new() returned something');
-
-#2
-ok( $db->isa('Locale::Object::DB'), "it's the right class");
+isa_ok( $db, 'Locale::Object::DB');
 
 my $result = $db->lookup(
                          table         => 'country', 
@@ -30,8 +27,8 @@ my $name_native           = @{$result}[0]->{'name_native'};
 my $main_timezone         = @{$result}[0]->{'main_timezone'};
 my $uses_daylight_savings = @{$result}[0]->{'uses_daylight_savings'};
   
-#3
-is( $name, 'Uzbekistan', 'country lookup was OK');
+#2
+is( $name, 'Uzbekistan', 'lookup was successful' );
 
    
 $result = $db->lookup_dual(
@@ -43,6 +40,6 @@ $result = $db->lookup_dual(
                            val_2      => 'eng'
                           );
 
-#4
-is( @{$result}[0]->{'official'}, 'true', 'dual lookup was OK');
+#3
+is( @{$result}[0]->{'official'}, 'true', 'lookup_dual was successful' );
 

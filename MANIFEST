@@ -21,4 +21,5 @@ t/02country.t
 t/03currency.t
 t/04continent.t
 t/05language.t
-t/06convert.t
+t/06object.t
+t/07convert.t

@@ -1,3 +1,16 @@
+2003-12-29: 0.54_01
+            * Locale::Object itself now has functionality: creating compound
+              objects that can contain country, currency and language objects.
+              This is still incomplete, and the API is almost certainly going
+              to change.
+            * Altered tests and Converter.pm further after 0.53 test results
+              for more robustness. No longer has Finance::Currency::Convert::XE
+              and Finance::Currency::Convert::Yahoo as requirements.
+            * Language.pm's countries() will now return an array in array 
+              context. Added missing documentation for method.
+            * Changed tests to use isa_ok().
+            * Removed an incorrect line of documentation from Language.pm.
+
 2003-12-22: 0.53
             * Removed a chunk of old code that had got back into DB.pm 
               somehow and was causing warnings.

@@ -2,7 +2,7 @@ package Locale::Object::Currency;
 
 use strict;
 use warnings::register;
-use Carp qw(croak);
+use Carp;
 use vars qw($VERSION);
 
 use Locale::Object;
@@ -11,7 +11,7 @@ use base qw( Locale::Object );
 use Locale::Object::Country;
 use Locale::Object::DB;
 
-$VERSION = "0.22";
+$VERSION = "0.23";
 
 my $db = Locale::Object::DB->new();
 
@@ -43,35 +43,54 @@ sub init
   # Get the value given for the parameter.
   my $value = $params{$parameter};
 
+  # Make sure input matches style of values in the db.
+  if ($parameter eq 'country_code')
+  {
+    $value = lc($value);
+  }
+  elsif ($parameter eq 'code')
+  {
+    $value = uc($value);
+  }
+  
   # Look in the database for a match.
   my $result = $db->lookup(
-                                    table         => 'currency',
-                                    result_column => '*',
-                                    search_column => $parameter,
-                                    value         => $value
-                                   );
+                           table         => 'currency',
+                           result_column => '*',
+                           search_column => $parameter,
+                           value         => $value
+                          );
 
   croak "Error: Unknown $parameter given for initialization: $value" unless $result;
-  # Set values from the results of our query.
-  my $name           = @{$result}[0]->{'name'}; 
-  my $code           = @{$result}[0]->{'code'}; 
-  my $code_numeric   = @{$result}[0]->{'code_numeric'}; 
-  my $symbol         = @{$result}[0]->{'symbol'}; 
-  my $subunit        = @{$result}[0]->{'subunit'}; 
-  my $subunit_amount = @{$result}[0]->{'subunit_amount'}; 
-  
-  # Check for pre-existing objects. Return it if there is one.
-  my $currency = $self->exists($code);
-  return $currency if $currency;
 
-  # If not, make a new object.
-  _make_currency($self, $name, $code, $code_numeric, $symbol, $subunit, $subunit_amount);
+  if (defined @{$result}[0])
+  {
+    # Set values from the results of our query.
+    my $name           = @{$result}[0]->{'name'}; 
+    my $code           = @{$result}[0]->{'code'}; 
+    my $code_numeric   = @{$result}[0]->{'code_numeric'}; 
+    my $symbol         = @{$result}[0]->{'symbol'}; 
+    my $subunit        = @{$result}[0]->{'subunit'}; 
+    my $subunit_amount = @{$result}[0]->{'subunit_amount'}; 
+    
+    # Check for pre-existing objects. Return it if there is one.
+    my $currency = $self->exists($code);
+    return $currency if $currency;
   
-  # Register the new object.
-  $self->register();
-
-  # Return the object.
-  $self;
+    # If not, make a new object.
+    _make_currency($self, $name, $code, $code_numeric, $symbol, $subunit, $subunit_amount);
+    
+    # Register the new object.
+    $self->register();
+  
+    # Return the object.
+    $self;
+  }
+  else
+  {
+    carp "Warning: No result found in currency table for '$value' in $parameter.";
+    return;
+  }
 }
 
 # Check if objects exist.
@@ -257,7 +276,7 @@ Locale::Object::Currency - currency information objects
 
 =head1 VERSION
 
-0.22
+0.23
 
 =head1 DESCRIPTION
 
@@ -284,7 +303,7 @@ C<Locale::Object::Country> allows you to create objects containing information a
 
     my $usd = Locale::Object::Currency->new( country_code => 'us' );
 
-The C<new> method creates an object. It takes a single-item hash as an argument - valid options to pass are ISO 3166 values - 'code', 'code_numeric' and 'name', and also 'country_code', which is an alpha2 country code (see L<Locale::Object::DB::Schemata> for details on these). If you give a country code, a currency object will be created representing the currency of the country you specified.
+The C<new> method creates an object. It takes a single-item hash as an argument - valid options to pass are ISO 3166 values - 'code' and 'code_numeric'; also 'country_code', which is an alpha2 country code (see L<Locale::Object::DB::Schemata> for details on these). If you give a country code, a currency object will be created representing the currency of the country you specified.
 
 The objects created are singletons; if you try and create a currency object when one matching your specification already exists, C<new()> will return the original one.
 
@@ -298,7 +317,7 @@ These methods retrieve the values of the attributes in the object whose name the
 
     my @countries = $usd->countries;
 
-Returns an array of L<Locale::Object::Country> objects with their ISO 3166 alpha2 codes as keys (see L<Locale::Object::DB::Schemata> for more details on those) for all countries using this currency in array context, or a reference in scalar context. The objects have their own attribute methods, so you can do things like this for example:
+Returns an array (in array context, otherwise a reference) of L<Locale::Object::Country> objects with their ISO 3166 alpha2 codes as keys (see L<Locale::Object::DB::Schemata> for more details on those) for all countries using this currency in array context, or a reference in scalar context. The objects have their own attribute methods, so you can do things like this for example:
 
     foreach my $place (@countries)
     {

@@ -2,7 +2,7 @@ package Locale::Object::Language;
 
 use strict;
 use warnings::register;
-use Carp qw(croak);
+use Carp;
 use vars qw($VERSION);
 
 use Locale::Object;
@@ -11,7 +11,7 @@ use base qw( Locale::Object );
 use Locale::Object::Country;
 use Locale::Object::DB;
 
-$VERSION = "0.12";
+$VERSION = "0.13";
 
 my $db = Locale::Object::DB->new();
 
@@ -43,6 +43,16 @@ sub init
   # Get the value given for the parameter.
   my $value = $params{$parameter};
 
+  # Make sure input matches style of values in the db.
+  if ($parameter eq 'name')
+  {
+    $value = ucfirst($value);
+  }
+  elsif ($parameter eq 'code_alpha2' or $parameter eq 'code_alpha3')
+  {
+    $value = lc($value);
+  }
+
   # Look in the database for a match.
   my $result = $db->lookup(
                                     table         => 'language',
@@ -52,24 +62,33 @@ sub init
                                    );
 
   croak "Error: Unknown $parameter given for initialization: $value" unless $result;
+
+  if (defined @{$result}[0])
+  {  
+    # Get values from our query.
+    my $code_alpha2 = @{$result}[0]->{'code_alpha2'};
+    my $code_alpha3 = @{$result}[0]->{'code_alpha3'};
+    my $name        = @{$result}[0]->{'name'}; 
+      
+    # Check for pre-existing objects. Return it if there is one.
+    my $enguage = $self->exists($code_alpha3);
+    return $enguage if $enguage;
   
-  # Get values from our query.
-  my $code_alpha2 = @{$result}[0]->{'code_alpha2'};
-  my $code_alpha3 = @{$result}[0]->{'code_alpha3'};
-  my $name        = @{$result}[0]->{'name'}; 
+    # If not, make a new object.
+    _make_language($self, $code_alpha2, $code_alpha3, $name);
     
-  # Check for pre-existing objects. Return it if there is one.
-  my $enguage = $self->exists($code_alpha3);
-  return $enguage if $enguage;
-
-  # If not, make a new object.
-  _make_language($self, $code_alpha2, $code_alpha3, $name);
+    # Register the new object.
+    $self->register();
   
-  # Register the new object.
-  $self->register();
+    # Return the object.
+    $self;
+  }
+  else
+  {
+    carp "Warning: No result found in language table for '$value' in $parameter.";
+    return;
+  }
 
-  # Return the object.
-  $self;
 }
 
 # Check if objects exist.
@@ -127,6 +146,8 @@ sub countries
     # Check for countries attribute. Set it if we don't have it.
     _set_countries($self) if $self->{_name};
     
+    # Give an array if requested in array context, otherwise a reference.    
+    return @{$self->{_countries}} if wantarray;    
     return $self->{_countries};
 }
 
@@ -244,7 +265,7 @@ Locale::Object::Language - language information objects
 
 =head1 VERSION
 
-0.12
+0.13
 
 =head1 DESCRIPTION
 
@@ -260,7 +281,7 @@ C<Locale::Object::Language> allows you to create objects containing information 
     my $code_alpha2 = $eng->code_alpha2;
     my $code_alpha3 = $eng->code_alpha3;
     
-    my @countries = @{$eng->countries};
+    my @countries = $eng->countries;
 
     my $gb  = Locale::Object::Country->new(  code_alpha2 => 'gb'  );
 
@@ -272,7 +293,7 @@ C<Locale::Object::Language> allows you to create objects containing information 
 
     my $eng = Locale::Object::Language->new( code_alpha3 => 'eng' );
 
-The C<new> method creates an object. It takes a single-item hash as an argument - valid options to pass are ISO 3166 values - 'code', 'code_numeric' and 'name', and also 'country_code', which is an alpha2 country code (see L<Locale::Object::DB::Schemata> for details on these). If you give a country code, a currency object will be created representing the currency of the country you specified.
+The C<new> method creates an object. It takes a single-item hash as an argument - valid options to pass are ISO 3166 values - 'code_alpha2', 'code_alpha3' and 'name' (see L<Locale::Object::DB::Schemata> for details on these).
 
 The objects created are singletons; if you try and create a currency object when one matching your specification already exists, C<new()> will return the original one.
 
@@ -281,6 +302,24 @@ The objects created are singletons; if you try and create a currency object when
     my $name = $country->name;
     
 These methods retrieve the values of the attributes in the object whose name they share.
+
+=head2 C<countries()>
+
+    my @countries = $eng->countries;
+
+Returns an array (in array context, otherwise a reference) of L<Locale::Object::Country> objects with their ISO 3166 alpha2 codes as keys (see L<Locale::Object::DB::Schemata> for more details on those) for all countries using this currency in array context, or a reference in scalar context. The objects have their own attribute methods, so you can do things like this for example:
+
+    foreach my $place (@countries)
+    {
+      print $place->name, "\n";
+    }
+    
+Which will list you all the countries that use in that currency. See the documentation for L<Locale::Object::Country> for a listing of country attributes. Note that you can chain methods as well.
+
+    foreach my $place (@countries)
+    {
+      print $place->continent->name, "\n";
+    }
 
 =head2 C<official()>
 
@@ -292,7 +331,7 @@ Give this method a L<Locale::Object::Country> object, and it will return a 'true
 
 =head1 KNOWN BUGS
 
-The database of language information is not perfect by a long stretch. In particular, numerous comparatively obscure secondary or regional languages, such as in several African countries and India, that don't have ISO codes. (See note in L<Locale::Object::DB::Schemata> about data sources.) Please send any corrections to the author.
+The database of language information is not perfect by a long stretch. In particular, numerous comparatively obscure secondary or regional languages that don't have ISO codes, such as in several African countries and India, are missing. (See note in L<Locale::Object::DB::Schemata> about data sources.) Please send any corrections to the author.
 
 =head1 AUTHOR
 

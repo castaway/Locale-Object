@@ -11,8 +11,6 @@ Module::Build->new(
                                       perl                              => '5.6.0',
                                       DBI                               => 0,
                                       DBD::SQLite                       => 0,
-                                      Finance::Currency::Convert::XE    => 0,
-                                      Finance::Currency::Convert::Yahoo => 0,
                                       Scalar::Util                      => 0.10
                                      },
                    build_requires => {

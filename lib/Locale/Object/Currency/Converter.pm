@@ -7,7 +7,38 @@ use vars qw($VERSION);
 
 use Scalar::Util qw(looks_like_number);
 
-$VERSION = "0.11";
+my ($use_xe, $xe_error, $use_yahoo, $yahoo_error);
+
+# Check if we have the two modules that actually do the work of conversions.
+eval {
+  require Finance::Currency::Convert::XE;
+};
+
+if ($@)
+{
+  $use_xe   = 0;
+  $xe_error = $@;
+}
+else
+{
+  $use_xe = 1;
+}
+
+eval {
+  require Finance::Currency::Convert::Yahoo;
+};
+
+if ($@)
+{
+  $use_yahoo   = 0;
+  $yahoo_error = $@;
+}
+else
+{
+  $use_yahoo = 1;
+}
+
+$VERSION = "0.12";
 
 sub new
 {
@@ -70,8 +101,21 @@ sub service
   my $self = shift;
   my $service = shift;
   
-  croak "Error: Values for service can be 'XE' or 'Yahoo'; you said $service." unless $service =~ /^Yahoo$|^XE$/;
+  $service = lc($service);
     
+  if ($service eq 'xe')
+  {
+    croak "ERROR: Cannot set service to XE: $xe_error" unless $use_xe == 1;
+  }
+  elsif ($service eq 'yahoo')
+  {
+    croak "ERROR: Cannot set service to Yahoo: $yahoo_error" unless $use_yahoo == 1;
+  }
+  else
+  {
+    croak "ERROR: Values for service can be 'XE' or 'Yahoo' (case-insensitive); you said '$service'.";
+  }
+  
   $self->{service} = $service;
 }
 
@@ -131,8 +175,6 @@ sub _yahoo
   my $self  = shift;
   my $value = shift;
   
-  use Finance::Currency::Convert::Yahoo;
-
   # We're not in a talkative mood.
   $Finance::Currency::Convert::Yahoo::CHAT = undef;
 
@@ -142,7 +184,7 @@ sub _yahoo
     $result = Finance::Currency::Convert::Yahoo::convert($value,$self->{from}->code,$self->{to}->code);
   };
   
-  croak "ERROR: $!" if $! ne '';
+  return "ERROR: $!" if $! ne '';
   
   $result;
 }
@@ -152,14 +194,13 @@ sub _xe
 {
   my $self = shift;
   my $value = shift;
-  
-  use Finance::Currency::Convert::XE;
 
   my $xe = Finance::Currency::Convert::XE->new() or croak "Error: Couldn't create Finance::Currency::Convert::XE object: $!";
 
   my $result;
 
-  eval {
+  eval
+  {
     $result = $xe->convert(
                            'source' => $self->{from}->code,
                            'target' => $self->{to}->code,
@@ -167,8 +208,8 @@ sub _xe
                           );
   };
   
-  croak "ERROR: $! / " . $xe->error if $! ne '';
-
+  return "ERROR: $!" if $! ne '';
+  
   $result;
 }
 
@@ -178,9 +219,9 @@ sub rate
   my $self = shift;
 
   # If there's no rate stored, set one.
-  $self->refresh unless $self->{rate};
+  $self->refresh unless $self->{_rate};
 
-  return $self->{rate};
+  return $self->{_rate};
 }
 
 # Give the time that the rate was stored.
@@ -188,9 +229,9 @@ sub timestamp
 {
   my $self = shift;
  
-  if ($self->{timestamp})
+  if ($self->{_timestamp})
   {
-    return $self->{timestamp};
+    return $self->{_timestamp};
   }
   else
   {
@@ -207,9 +248,22 @@ sub refresh
   my $rate = $self->convert(1);
 
   # Make a note of the rate and the time.
-  $self->{rate}      = $rate;
-  $self->{timestamp} = time;  
+  $self->{_rate}      = $rate;
+  $self->{_timestamp} = time;  
 }
+
+# Can you use Finance::Currency::Convert::XE?
+sub use_xe
+{
+  $use_xe;
+}
+
+# Can you use Finance::Currency::Convert::Yahoo?
+sub use_yahoo
+{
+  $use_yahoo;
+}
+
 
 1;
 
@@ -221,7 +275,7 @@ Locale::Object::Currency::Converter - convert between currencies
 
 =head1 VERSION
 
-0.11
+0.12
 
 =head1 DESCRIPTION
 
@@ -246,6 +300,9 @@ C<Locale::Object::Currency::Converter> allows you to convert between values of c
     my $result    = $converter->convert(5);
     my $rate      = $converter->rate;
     my $timestamp = $converter->timestamp;
+
+    print $converter->use_xe;
+    print $converter->use_yahoo;
     
     $converter->from($eur);
     $converter->to($jpy);
@@ -265,6 +322,18 @@ This module requires L<Finance::Currency::Convert::XE> and L<Finance::Currency::
 
 Creates a new converter object. With no arguments, creates a blank object. Possible arguments are C<from>, C<to> and C<service>, all or none of which may be given. C<from> and C<to> must be L<Locale::Object::Currency> objects. C<service> must be one of either 'XE' or 'Yahoo', to specify the conversion should be done by L<http://xe.com/ucc/> or L<http://finance.yahoo.com/> respectively.
 
+=head2 C<use_xe()>
+
+    print $converter->use_xe;
+    
+Returns 1 or 0 depending on whether a C<use Finance::Currency::Convert::XE;> was successful. If 1, you can do conversions using the XE.com service.
+
+=head2 C<use_yahoo()>
+
+    print $converter->use_yahoo;
+    
+Returns 1 or 0 depending on whether a C<use Finance::Currency::Convert::Yahoo;> was successful. If 1, you can do conversions using the finance.yahoo.com service.
+
 =head2 C<from()>
 
     $converter->from($eur);
@@ -281,7 +350,7 @@ Sets a currency to do conversions to. Takes a L<Locale::Object::Currency> object
 
     $converter->service('Yahoo');
 
-Sets which currency conversion service to use.
+Sets which currency conversion service to use. Depends on two other modules; see C<use_xe()> and C<use_yahoo()> above.
 
 =head2 C<convert()>
 

@@ -14,6 +14,8 @@ from several sources and provided in an accompanying DBD::SQLite database.
 
 At present, the modules are:
 
+* Locale::Object                      - make compound objects containing 
+                                        country, currency and language objects
 * Locale::Object::Country             - objects representing countries
 * Locale::Object::Continent           - objects representing continents
 * Locale::Object::Currency            - objects representing currencies
@@ -23,13 +25,8 @@ At present, the modules are:
                                         data sources.
 * Locale::Object::Language            - objects representing languages
 
-For more information, see the documentation for those modules. Forthcoming 
-releases will include Locale::Object::Timezone.
+For more information, see the documentation for those modules.
 
-KNOWN BUGS
-
-The database of currency information is not perfect by a long stretch. If 
-you find mistakes or missing information, please send them to the author.
 
 AUTHOR
 

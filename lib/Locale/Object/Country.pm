@@ -2,7 +2,7 @@ package Locale::Object::Country;
 
 use strict;
 use warnings::register;
-use Carp qw(croak);
+use Carp;
 use vars qw($VERSION);
 
 use Locale::Object;
@@ -44,6 +44,16 @@ sub init
   # Get the value given for the parameter.
   my $value = $params{$parameter};
 
+  # Make sure input matches style of values in the db.
+  if ($parameter eq 'name')
+  {
+    $value = ucfirst($value);
+  }
+  elsif ($parameter eq 'code_alpha2' or $parameter eq 'code_alpha3')
+  {
+    $value = lc($value);
+  }
+
   # Look in the database for a match.
   my $result = $db->lookup(
                                     table         => 'country',
@@ -54,27 +64,35 @@ sub init
   
   croak "Error: Unknown $parameter given for initialization: $value" unless $result;
 
-  # Get the values from the result of our database query.
-  my $code_alpha2           = @{$result}[0]->{'code_alpha2'}; 
-  my $code_alpha3           = @{$result}[0]->{'code_alpha3'}; 
-  my $code_numeric          = @{$result}[0]->{'code_numeric'}; 
-  my $name                  = @{$result}[0]->{'name'};
-  my $dialing_code          = @{$result}[0]->{'dialing_code'};
-  my $utc_offset_main       = @{$result}[0]->{'utc_offset_main'};
-  my $utc_offsets_all       = @{$result}[0]->{'utc_offsets_all'};
-
-  # Check for pre-existing objects. Return it if there is one.
-  my $country = $self->exists($code_alpha2);
-  return $country if $country;
-
-  # If not, make a new object.
-  _make_country($self, $code_alpha2, $code_alpha3, $code_numeric, $name, $dialing_code, $utc_offset_main, $utc_offsets_all);
+  if (defined @{$result}[0])
+  {
+    # Get the values from the result of our database query.
+    my $code_alpha2           = @{$result}[0]->{'code_alpha2'}; 
+    my $code_alpha3           = @{$result}[0]->{'code_alpha3'}; 
+    my $code_numeric          = @{$result}[0]->{'code_numeric'}; 
+    my $name                  = @{$result}[0]->{'name'};
+    my $dialing_code          = @{$result}[0]->{'dialing_code'};
+    my $utc_offset_main       = @{$result}[0]->{'utc_offset_main'};
+    my $utc_offsets_all       = @{$result}[0]->{'utc_offsets_all'};
   
-  # Register the new object.
-  $self->register();
-
-  # Return the object.
-  $self;
+    # Check for pre-existing objects. Return it if there is one.
+    my $country = $self->exists($code_alpha2);
+    return $country if $country;
+  
+    # If not, make a new object.
+    _make_country($self, $code_alpha2, $code_alpha3, $code_numeric, $name, $dialing_code, $utc_offset_main, $utc_offsets_all);
+    
+    # Register the new object.
+    $self->register();
+  
+    # Return the object.
+    $self;
+  }
+  else
+  {
+    carp "Warning: No result found in country table for '$value' in $parameter.";
+    return;
+  }
 }
 
 # Check if objects exist.

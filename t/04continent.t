@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 6;
+use Test::More tests => 5;
 
 use Locale::Object::Continent;
 use Locale::Object::Country;
@@ -11,18 +11,15 @@ use Locale::Object::Country;
 my $asia = Locale::Object::Continent->new( name => 'Asia' );
 
 #1
-ok( defined $asia, 'new() returned something');
-
-#2
-ok( $asia->isa('Locale::Object::Continent'), "it's the right class");
+isa_ok( $asia, 'Locale::Object::Continent' );
 
 my $cont_name = $asia->name;
 
-#3
-is( $cont_name, 'Asia', 'it has the correct name');
+#2
+is( $cont_name, 'Asia', 'it has the correct name' );
 
-#4
-is( scalar @{$asia->countries}, 47, 'it has the correct number of countries in it');
+#3
+is( scalar @{$asia->countries}, 47, 'it has the correct number of countries in it' );
 
 my %countries;
 
@@ -34,13 +31,13 @@ foreach my $where ($asia->countries)
   $countries{$where_code} = undef;
 }
 
-#5
-ok( exists $countries{'af'}, 'a country in it has the right name');
+#4
+ok( exists $countries{'af'}, 'a country in it has the right name' );
 
 my $copy = Locale::Object::Continent->new( name => 'Asia' );
 
-#6
-ok( $copy eq $asia, 'the object is a singleton');
+#5
+ok( $copy eq $asia, 'the object is a singleton' );
 
 # Remove __END__ to get a dump of the data structures created by this test.
 __END__
