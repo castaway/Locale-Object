@@ -1,0 +1,10 @@
+In order to install these modules, you need Module::Build. CPANPLUS.pm has had support for Module::Build since January of 2003; if you are currently using CPAN.pm, please consider upgrading to CPANPLUS. A Makefile.PL is included with this distribution, but it will ask if you want to install Module::Build, and do so with CPAN.pm if you so consent, and only then install the module.
+
+The install process is a standard Module::Build install:
+
+    perl Build.PL
+    ./Build
+    ./Build test
+    ./Build install
+    
+    
