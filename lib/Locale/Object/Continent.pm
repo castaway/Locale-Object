@@ -8,7 +8,7 @@ use vars qw($VERSION);
 use Locale::Object::Country;
 use Locale::Object::DB;
 
-$VERSION = "0.2";
+$VERSION = "0.21";
 
 my $db = Locale::Object::DB->new();
 
@@ -124,8 +124,11 @@ sub countries
 {
     my $self = shift;
     
+    # No name, no countries.
+    return unless $self->{_name};
+    
     # Check for countries attribute. Set it if we don't have it.
-    _set_countries($self) if $self->{_name};
+    _set_countries($self) unless $self->{_countries};
 
     # Give an array if requested in array context, otherwise a reference.    
     return @{$self->{_countries}} if wantarray;
@@ -137,28 +140,25 @@ sub _set_countries
 {
     my $self = shift;
 
-    # Do nothing if the list already exists.
-    return if $self->{_countries};
-
     my (%country_codes, @countries);
     
-    # If it doesn't, find all countries in this continent and put them in a hash.
-    foreach my $result ( $db->lookup_all(
-                                        table => "continent", 
-                                        result_column => "country_code", 
-                                        search_column => "name", 
-                                        value => $self->{'_name'} ) )
-    {
-      $country_codes{$result} = undef;
-    }
+    # If it doesn't, find all countries in this continent.
+    my $result = $db->lookup(
+                                      table => 'continent', 
+                                      result_column => 'country_code', 
+                                      search_column => 'name', 
+                                      value => $self->{'_name'}
+                                     );
 
     # Create new country objects and put them into an array.
-    foreach my $where (keys %country_codes)
+    foreach my $place (@{$result})
     {
+      my $where = $place->{'country_code'};
+
       my $obj = Locale::Object::Country->new( code_alpha2 => $where );
       push @countries, $obj; 
     }
-    
+        
     # Set a reference to that array as an attribute.
     $self->{'_countries'} = \@countries;
 }
@@ -173,7 +173,7 @@ Locale::Object::Continent - continent information objects
 
 =head1 VERSION
 
-0.2
+0.21
 
 =head1 DESCRIPTION
 
@@ -196,13 +196,13 @@ The C<new> method creates an object. It takes a single-item hash as an argument 
 
 The objects created are singletons; if you try and create a continent object when one matching your specification already exists, C<new()> will return the original one.
 
-=head2 C<name>
+=head2 C<name()>
 
     my $name = $asia->name;
     
 Retrieves the value of the continent object's name.
 
-=head2 C<countries>
+=head2 C<countries()>
 
     my @countries = $asia->countries;
 

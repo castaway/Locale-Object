@@ -1,3 +1,17 @@
+2003-11-28: 0.3
+            * Added a new module: Language.pm.
+            * The database now contains a table of language-country mappings.
+            * New languages() method for Country.pm.
+            * New lookup_dual() method for DB.pm.
+            * Altered DB.pm's lookup() method - now returns a reference to an 
+              array of hashes rather than an array. This should not change 
+              again. Removed redundant lookup_all() method as a result.
+            * Continent.pm does now really actually give back an array.
+            * Added continent names to the database for some Pacific islands 
+              that should have been listed as Oceania but weren't.
+            * Added currencies to the db that were missing for those same 
+              islands.
+
 2003-11-25: 0.2
             * Cleaned up the API a little - the countries() method in 
               Continent.pm and Currency.pm now gives an array back, instead 

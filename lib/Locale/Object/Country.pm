@@ -8,8 +8,9 @@ use vars qw($VERSION);
 use Locale::Object::DB;
 use Locale::Object::Currency;
 use Locale::Object::Continent;
+use Locale::Object::Language;
 
-$VERSION = "0.11";
+$VERSION = "0.2";
 
 my $db = Locale::Object::DB->new();
 
@@ -51,19 +52,30 @@ sub init
   my $value = $params{$parameter};
 
   # Look in the database for a match.
-  my @attributes = $db->lookup('country', $parameter, $value);
+  my $result = $db->lookup(
+                                    table         => 'country',
+                                    result_column => '*',
+                                    search_column => $parameter,
+                                    value         => $value
+                                   );
+  
+  croak "Error: Unknown $parameter given for initialization: $value" unless $result;
 
-  croak "Error: Unknown $parameter given for initialization: $value" unless @attributes;
-  
-  # The first attribute we get is the alpha2 country code.
-  my $code = $attributes[0]; 
-  
+  # Get the values from the result of our database query.
+  my $code_alpha2           = @{$result}[0]->{'code_alpha2'}; 
+  my $code_alpha3           = @{$result}[0]->{'code_alpha3'}; 
+  my $code_numeric          = @{$result}[0]->{'code_numeric'}; 
+  my $name                  = @{$result}[0]->{'name'};
+  my $name_native           = @{$result}[0]->{'name_native'};
+  my $main_timezone         = @{$result}[0]->{'main_timezone'};
+  my $uses_daylight_savings = @{$result}[0]->{'uses_daylight_savings'};
+
   # Check for pre-existing objects. Return it if there is one.
-  my $country = $self->exists($code);
+  my $country = $self->exists($code_alpha2);
   return $country if $country;
 
   # If not, make a new object.
-  _make_country($self, @attributes);
+  _make_country($self, $code_alpha2, $code_alpha3, $code_numeric, $name, $name_native, $main_timezone, $uses_daylight_savings);
   
   # Register the new object.
   $self->register();
@@ -118,10 +130,67 @@ sub _make_country
     $counter++; 
   }
 
-  my (undef, $continent) = $db->lookup('continent','country_code',$code);
-  $self->{_continent}    = Locale::Object::Continent->new( name => $continent );
-  $self->{_currency}     = Locale::Object::Currency->new( country_code => $code );
+  # Check there's a continent row matching our current country.
+  my $result = $db->lookup(
+                                    table         => 'continent',
+                                    result_column => '*',
+                                    search_column => 'country_code',
+                                    value         => $code
+                                   );
   
+  my $continent = @{$result}[0]->{'name'};
+  
+  croak "Error: no continent found in the database for country code $code." unless $continent;
+
+  # Make new continent and currency objects as attributes.
+  $self->{_continent} = Locale::Object::Continent->new(        name => $continent );
+  $self->{_currency}  = Locale::Object::Currency->new( country_code => $code      );
+  
+}
+
+# Method for retrieving all languages spoken in this country.
+sub languages
+{
+  my $self = shift;
+
+  # No name, no languages.
+  return unless $self->{_name};
+  
+  # Check for countries attribute. Set it if we don't have it.
+  _set_languages($self) unless $self->{_languages};
+
+  # Give an array if requested in array context, otherwise a reference.    
+  return @{$self->{_languages}} if wantarray;
+  return $self->{_languages};
+  
+}
+
+# Private method to set an attribute with an array of objects for all languages spoken in this country.
+sub _set_languages
+{
+    my $self = shift;
+
+    my @languages;
+    
+    # If it doesn't, find all countries in this continent and put them in a hash.
+    my $result = $db->lookup(
+                                      table => 'language_mappings', 
+                                      result_column => 'language', 
+                                      search_column => 'country', 
+                                      value => $self->{'_code_alpha2'}
+                                     );
+
+    # Create new country objects and put them into an array.
+    foreach my $lang (@{$result})
+    {
+      my $lang_code = $lang->{'language'};
+      
+      my $obj = Locale::Object::Language->new( code_alpha3 => $lang_code );
+      push @languages, $obj; 
+    }
+    
+    # Set a reference to that array as an attribute.
+    $self->{'_languages'} = \@languages;
 }
 
 # Small methods that return object attributes.
@@ -191,7 +260,7 @@ Locale::Object::Country - OO locale information for countries
 
 =head1 VERSION
 
-0.11
+0.2
 
 =head1 DESCRIPTION
 
@@ -206,8 +275,10 @@ C<Locale::Object::Country> allows you to create objects containing information a
     my $name        = $country->name;         # 'Afghanistan'
     my $code_alpha3 = $country->code_alpha3;  # 'afg'
     
-    my $currency      = $country->currency;
-    my $continent     = $country->continent;
+    my $currency    = $country->currency;
+    my $continent   = $country->continent;
+
+    my @languages   = $country->languages;
 
 =head1 METHODS
 
@@ -219,13 +290,13 @@ The C<new> method creates an object. It takes a single-item hash as an argument 
 
 The objects created are singletons; if you try and create a country object when one matching your specification already exists, C<new()> will return the original one.
 
-=head2 C<code_alpha2, code_alpha, code_numeric, name, name_native, main_timezone, uses_daylight_savings>
+=head2 C<code_alpha2(), code_alpha(), code_numeric(), name(), name_native(), main_timezone(), uses_daylight_savings()>
 
     my $name = $country->name;
     
 These methods retrieve the values of the attributes in the object whose name they share.
 
-=head2 C<currency, continent>
+=head2 C<currency(), continent()>
 
 These methods return L<Locale::Object::Currency> and L<Locale::Object::Continent> objects respectively. Both of those have their own attribute methods, so you can do things like this:
 
@@ -236,6 +307,17 @@ See the documentation for those two modules for a listing of currency and contin
 
 Note: More attributes will be added in a future release; see L<Locale::Object::DB::Schemata> for a full listing of the contents of the database.
     
+=head2 C<languages()>
+
+    my @languages = $country->languages;
+
+Returns an array of L<Locale::Object::Language> objects in array context, or a reference in scalar context. The objects have their own attribute methods, so you can do things like this:
+
+    foreach my $lang (@languages)
+    {
+      print $lang->name, "\n";
+    }
+
 =head1 AUTHOR
 
 Earle Martin <EMARTIN@cpan.org>

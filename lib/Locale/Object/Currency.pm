@@ -8,7 +8,7 @@ use vars qw($VERSION);
 use Locale::Object::Country;
 use Locale::Object::DB;
 
-$VERSION = "0.2";
+$VERSION = "0.21";
 
 my $db = Locale::Object::DB->new();
 
@@ -52,19 +52,28 @@ sub init
   my $value = $params{$parameter};
 
   # Look in the database for a match.
-  my @attributes = $db->lookup('currency', $parameter, $value);
+  my $result = $db->lookup(
+                                    table         => 'currency',
+                                    result_column => '*',
+                                    search_column => $parameter,
+                                    value         => $value
+                                   );
 
-  croak "Error: Unknown $parameter given for initialization: $value" unless @attributes;
-  
-  # The third attribute we get is the currency code.
-  my $code = $attributes[2]; 
+  croak "Error: Unknown $parameter given for initialization: $value" unless $result;
+  # Set values from the results of our query.
+  my $name           = @{$result}[0]->{'name'}; 
+  my $code           = @{$result}[0]->{'code'}; 
+  my $code_numeric   = @{$result}[0]->{'code_numeric'}; 
+  my $symbol         = @{$result}[0]->{'symbol'}; 
+  my $subunit        = @{$result}[0]->{'subunit'}; 
+  my $subunit_amount = @{$result}[0]->{'subunit_amount'}; 
   
   # Check for pre-existing objects. Return it if there is one.
   my $currency = $self->exists($code);
   return $currency if $currency;
 
   # If not, make a new object.
-  _make_currency($self, @attributes);
+  _make_currency($self, $name, $code, $code_numeric, $symbol, $subunit, $subunit_amount);
   
   # Register the new object.
   $self->register();
@@ -102,13 +111,13 @@ sub _make_currency
   my @attributes = @_;
 
   # The third attribute we get is the currency code.
-  my $currency_code = $attributes[2];
+  my $currency_code = $attributes[0];
   
   # The attributes we want to set.
   my @attr_names = qw(_name _code _code_numeric _symbol _subunit _subunit_amount);
   
   # Initialize a loop counter.
-  my $counter = 1;
+  my $counter = 0;
   
   foreach my $current_attribute (@attr_names)
   {
@@ -126,9 +135,14 @@ sub countries
 {
     my $self = shift;
     
-    # Check for countries attribute. Set it if we don't have it.
-    _set_countries($self) if $self->{_name};
+    # No name, no countries.
+    return unless $self->{_name};
     
+    # Check for countries attribute. Set it if we don't have it.
+    _set_countries($self) unless $self->{_countries};
+
+    # Give an array if requested in array context, otherwise a reference.    
+    return @{$self->{_countries}} if wantarray;
     return $self->{_countries};
 }
 
@@ -138,31 +152,28 @@ sub _set_countries
     my $self = shift;
 
     my $code = $self->{_code};
-    
-    # Do nothing if the list already exists.
-    return if $existing->{$code}->{'_countries'};
-    
+        
     # If it doesn't, find all countries using this currency and put them in a hash.
-    my (%country_codes, %countries);
+    my (%country_codes, @countries);
     
-    foreach my $result ( $db->lookup_all(
-                                        table => "currency", 
-                                        result_column => "country_code", 
-                                        search_column => "code", 
-                                        value => $existing->{$code}->{'_code'} ) )
-    {
-      $country_codes{$result} = 1;
-    }
+    my $result = $db->lookup(
+                                      table => "currency", 
+                                      result_column => "country_code", 
+                                      search_column => "code", 
+                                      value => $existing->{$code}->{'_code'}
+                                     );
     
-    # Create new country objects and put them into a hash.
-    foreach my $where (keys %country_codes)
+    # Create new country objects and put them into an array.
+    foreach my $place (@{$result})
     {
+      my $where = $place->{'country_code'};
+      
       my $obj = Locale::Object::Country->new( code_alpha2 => $where );
-      $countries{$where} = $obj;
+      push @countries, $obj;
     }
     
-    # Set a reference to that hash as an attribute.
-    $existing->{$code}->{'_countries'} = \%countries;       
+    # Set a reference to that array as an attribute.
+    $self->{'_countries'} = \@countries;       
 }
 
 # Small methods that return object attributes.
@@ -214,7 +225,7 @@ Locale::Object::Currency - currency information objects
 
 =head1 VERSION
 
-0.2
+0.21
 
 =head1 DESCRIPTION
 
@@ -245,13 +256,13 @@ The C<new> method creates an object. It takes a single-item hash as an argument 
 
 The objects created are singletons; if you try and create a currency object when one matching your specification already exists, C<new()> will return the original one.
 
-=head2 C<name, code, code_numeric, symbol, subunit, subunit_amount>
+=head2 C<name(), code(), code_numeric(), symbol(), subunit(), subunit_amount()>
 
     my $name = $country->name;
     
 These methods retrieve the values of the attributes in the object whose name they share.
 
-=head2 C<countries>
+=head2 C<countries()>
 
     my @countries = $usd->countries;
 

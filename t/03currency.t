@@ -13,20 +13,20 @@ my $usd = Locale::Object::Currency->new( country_code => 'us' );
 ok( defined $usd, 'new() returned something;');
 
 #2
-ok( $usd->isa('Locale::Object::Currency'), 'it was the right class');
+ok( $usd->isa('Locale::Object::Currency'), "it's the right class");
 
 #3
-is( $usd->name, 'dollar', 'it had the right name');
+is( $usd->name, 'dollar', 'it has the right name');
 
 #4
-is( $usd->code, 'USD', 'it had the right code');
+is( $usd->code, 'USD', 'it has the right code');
 
-my %countries = %{$usd->countries};
+my @countries = @{$usd->countries};
 
-my $count = scalar keys %countries;
+my $count = scalar @countries;
 
 #5
-is( $count, 8, 'the number of countries sharing it was correct');
+is( $count, 12, 'the number of countries sharing it is correct');
 
 # The code/name mapping of objects in %countries should be consistent with this.
 my %names = (

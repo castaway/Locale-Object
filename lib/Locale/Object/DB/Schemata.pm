@@ -4,7 +4,7 @@ use strict;
 use warnings::register;
 use vars qw($VERSION);
 
-$VERSION = "0.11";
+$VERSION = "0.2";
 
 # DO NOT LEAVE IT IS NOT REAL
 
@@ -23,7 +23,7 @@ Locale::Object::DB::Schemata - schema documentation for the Locale::Object datab
 
 =head1 VERSION
 
-0.11
+0.2
 
 =head1 DESCRIPTION
 
@@ -80,7 +80,7 @@ The database of locale information used by the Locale::Object modules uses L<DBD
         name         char(13),
         PRIMARY KEY  (country_code)
     );
-#
+
 * C<country_code> contains ISO 3166 two-letter codes again, and C<name> contains associated continent names (Africa, Asia, Europe, North America, Oceania and South America). Sourced from L<http://www.worldatlas.com/cntycont.htm>.
 
 =head2 the 'language' table
@@ -102,7 +102,39 @@ The database of locale information used by the Locale::Object modules uses L<DBD
 
 =back
 
-In addition to the quoted sources, I also got some information from the fabulous L<http://www.nationmaster.com/>.
+=head2 the 'language_mappings' table
+
+    CREATE TABLE language_mappings (
+        id           char(4),
+        country      char(2),
+        language     char(3),
+        official     boolean,
+        PRIMARY KEY (id)
+    );
+    
+An example section of this table:
+
+    ID   COUNTRY  LANGUAGE  OFFICIAL
+    at_0   at       ger      true
+    at_1   at       slv      false
+    at_2   at       hrv      false
+    at_3   at       hun      false
+
+What this tells us is that in Austria, four languages are spoken: German, Slovenian, Croatian (Hrvatska) and Hungarian, and that only German is an official language of Austria. The mappings are ranked in order of prevalence of language, official languages first, followed by non-official. Please note that this is approximate at best. 
+
+My original source for the language-country mappings was L<http://www.infoplease.com/ipa/A0855611.html>. However, there is no clear origin for this list, which occurs in several places on the Web, and it required some serious rationalization before data was able to be usefully extracted for it.
+ 
+In addition to the preceding, the following sources were invaluable:
+
+=over 4
+
+* L<http://www.nationmaster.com/>
+
+* L<http://www.ethnologue.com/>
+
+* L<http://www.wikipedia.org/>
+
+=back
 
 =head1 AUTHOR
 

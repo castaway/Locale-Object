@@ -4,7 +4,7 @@ use strict;
 use warnings::register;
 use vars qw($VERSION);
 
-$VERSION = "0.2";
+$VERSION = "0.3";
 
 # Nobody home.
 
@@ -23,7 +23,7 @@ Locale::Object - OO locale information
 
 =head1 VERSION
 
-0.2
+0.3
 
 =head1 DESCRIPTION
 
@@ -43,9 +43,11 @@ At present, the modules are:
 
 * L<Locale::Object::DB::Schemata> - documents the database, including all data sources.
 
+* L<Locale::Object::Language> - objects representing languages
+
 =back
 
-For more information, see the documentation for those modules. Forthcoming releases will include C<Locale::Object::Language> and C<Locale::Object::Timezone>.
+For more information, see the documentation for those modules. Forthcoming releases will include  C<Locale::Object::Timezone>.
 
 =head1 KNOWN BUGS
 

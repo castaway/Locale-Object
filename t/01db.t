@@ -13,26 +13,36 @@ my $db = Locale::Object::DB->new();
 ok( defined $db, 'new() returned something');
 
 #2
-ok( $db->isa('Locale::Object::DB'), 'it was the right class');
+ok( $db->isa('Locale::Object::DB'), "it's the right class");
 
-my ($code_alpha2, $code_alpha3, $code_numeric, $name, $name_native, $primary_language, $main_timezone, $uses_daylight_savings) = $db->lookup('country', 'code_alpha2', 'uz');
+my $result = $db->lookup(
+                         table         => 'country', 
+                         result_column => '*',
+                         search_column => 'code_alpha2',
+                         value         => 'uz'
+                        );
 
+my $code_alpha2           = @{$result}[0]->{'code_alpha2'}; 
+my $code_alpha3           = @{$result}[0]->{'code_alpha3'}; 
+my $code_numeric          = @{$result}[0]->{'code_numeric'}; 
+my $name                  = @{$result}[0]->{'name'};
+my $name_native           = @{$result}[0]->{'name_native'};
+my $main_timezone         = @{$result}[0]->{'main_timezone'};
+my $uses_daylight_savings = @{$result}[0]->{'uses_daylight_savings'};
+  
 #3
-is( $name, 'Uzbekistan', 'it had the correct country name' );
+is( $name, 'Uzbekistan', 'country lookup was OK');
 
-my %countries;
-    
-foreach my $result ( $db->lookup_all(
-                                     table => "continent", 
-                                     result_column => "country_code", 
-                                     search_column => "name", 
-                                     value => 'Asia' ) )
-{
-  $countries{$result} = 1;
-}
-
-my $count = scalar keys %countries;
+   
+$result = $db->lookup_dual(
+                           table      => 'language_mappings', 
+                           result_col => 'official', 
+                           col_1      => 'country', 
+                           val_1      => 'gb',
+                           col_2      => 'language',
+                           val_2      => 'eng'
+                          );
 
 #4
-is( $count, 46, "query for all a continent's countries returned right num. of results");
+is( @{$result}[0]->{'official'}, 'true', 'dual lookup was OK');
 

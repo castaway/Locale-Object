@@ -14,15 +14,15 @@ my $asia = Locale::Object::Continent->new( name => 'Asia' );
 ok( defined $asia, 'new() returned something');
 
 #2
-ok( $asia->isa('Locale::Object::Continent'), 'it was the right class');
+ok( $asia->isa('Locale::Object::Continent'), "it's the right class");
 
 my $cont_name = $asia->name;
 
 #3
-is( $cont_name, 'Asia', 'it had the correct name');
+is( $cont_name, 'Asia', 'it has the correct name');
 
 #4
-is( scalar @{$asia->countries}, 46, 'it had the correct number of countries in it');
+is( scalar @{$asia->countries}, 47, 'it has the correct number of countries in it');
 
 my %countries;
 
@@ -35,7 +35,7 @@ foreach my $where ($asia->countries)
 }
 
 #5
-ok( exists $countries{'af'}, 'a country in it had the right name');
+ok( exists $countries{'af'}, 'a country in it has the right name');
 
 my $copy = Locale::Object::Continent->new( name => 'Asia' );
 
