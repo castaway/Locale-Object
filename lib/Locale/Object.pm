@@ -10,7 +10,7 @@ use Locale::Object::Country;
 use Locale::Object::Currency;
 use Locale::Object::Language;
 
-$VERSION = "0.7";
+$VERSION = "0.71";
 
 sub new
 {
@@ -514,15 +514,15 @@ There will be occasions you want to know whether all the attributes in your obje
     
 Returns 1 if the two remaining attributes in the object make sense compared against the attribute name you specify (if not specified, country is the default); otherwise, 0. The following table explains what's needed for a result of 1. Note: if an attribute doesn't exist, it's not *not* sane, so checking sanity against an attribute in an object with no other attributes will give a result of 1.
 
-  If sane against | country must | language must  | currency must
-  ------------------------------------------------------------------
-  country  (co.)  | n/a          | be used in co. | be used in co.
-  ------------------------------------------------------------------
-  language (la.)  | be using la. | n/a            | be used in a co. 
-                  |              |                | speaking la.
-  ------------------------------------------------------------------
-  currency (cu.)  | use cu.      | be spoken in a | n/a
-                  |              | co. using cu.  |
+  If sane against | country must          | language must          | currency must
+  -----------------------------------------------------------------------------------------
+  country         | n/a                   | be used in the country | be used in the country
+  -----------------------------------------------------------------------------------------
+  language        | be using the language | n/a                    | be used in a country
+                  |                       |                        | speaking the language
+  -----------------------------------------------------------------------------------------
+  currency        | use the currency      | be spoken in a country | n/a
+                  |                       | using the currency     |
                   
 =head2 C<make_sane()>
 
@@ -553,11 +553,11 @@ Earle Martin <EMARTIN@cpan.org>
 
 =head1 CREDITS
 
-Original concept: Pierre Denis (PDENIS). I had much useful assistance from Pierre, Tom Insam (TOMI) - who contributed to my knowledge of DBI - and James Duncan (JDUNCAN). Most of the OO concepts involved I learnt from Damian Conway (DCONWAY)'s excellent book "Object Oriented Perl" (ISBN 1-884777-79-1).
+Original concept: Pierre Denis (PDENIS). I had much useful assistance from Pierre, Tom Insam (TOMI) - who contributed to my knowledge of DBI - and James Duncan (JDUNCAN). Most of the OO concepts involved I learnt from Damian Conway (DCONWAY)'s excellent book "Object Oriented Perl" (ISBN 1-884777-79-1). Ask Bjørn Hansen (ABH) provided a patch for a bug in v0.7.
 
 =head1 COPYRIGHT
 
-Copyright 2003 Fotango Ltd. All rights reserved. L<http://opensource.fotango.com/>
+Copyright 2003-2004 Fotango Ltd. All rights reserved. L<http://opensource.fotango.com/>
 
 This module is released under the same license as Perl itself, and is provided on an "as is" basis. The author and Fotango Ltd make no warranties of any kind, either expressed or implied, as to the accuracy and/or utility of any results obtained from its use. However, if you do find something wrong with the results, please let the author know. Thanks.
 

@@ -15,7 +15,7 @@ use Locale::Object::Language;
 
 use DateTime::TimeZone;
 
-$VERSION = "0.34";
+$VERSION = "0.35";
 
 my $db = Locale::Object::DB->new();
 
@@ -159,10 +159,10 @@ sub _make_country
                                     value         => $code
                                    );
   
+  croak "Error: no continent found in the database for country code $code." unless @{$result}[0];
+  
   my $continent = @{$result}[0]->{'name'};
   
-  croak "Error: no continent found in the database for country code $code." unless $continent;
-
   # Make new continent and currency objects as attributes.
   $self->{_continent} = Locale::Object::Continent->new(        name => $continent );
   $self->{_currency}  = Locale::Object::Currency->new( country_code => $code      );
@@ -337,6 +337,7 @@ sub timezone
   if (@_)
   {
     my $timezone = shift;
+    return $self unless $timezone;
     $self->{_timezone} = DateTime::TimeZone->new( name => $timezone );
 
     return $self;
@@ -490,7 +491,7 @@ See the credits for L<Locale::Object>.
 
 =head1 LEGAL
 
-Copyright 2003 Fotango Ltd. All rights reserved. L<http://opensource.fotango.com/>
+Copyright 2003-2004 Fotango Ltd. All rights reserved. L<http://opensource.fotango.com/>
 
 This module is released under the same license as Perl itself, and is provided on an "as is" basis. The author and Fotango Ltd make no warranties of any kind, either expressed or implied, as to the accuracy and/or utility of any results obtained from its use. However, if you do find something wrong with the results, please let the author know. Thanks.
 

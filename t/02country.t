@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 14;
+use Test::More tests => 16;
 
 use Locale::Object::Country;
 
@@ -76,6 +76,12 @@ my $britain = Locale::Object::Country->new( code_alpha2 => 'gb' );
 
 #14
 ok( $britain->all_timezones->[0]->name eq 'Europe/London' && $britain->all_timezones->[1]->name eq 'Europe/Belfast', 'all_timezones gave the right list');
+
+#15
+ok( my $antarctica = Locale::Object::Country->new( code_alpha2 => 'aq' ), 'load Antarctica');
+
+#16
+ok( my $congo = Locale::Object::Country->new( code_alpha2 => 'cd' ), 'load Congo');
 
 # Remove __END__ to get a dump of the data structures created by this test.
 __END__

@@ -1,3 +1,8 @@
+2004-03-31: 0.71
+            * Ask Bjørn Hansen provided a patch for a bug in using Antarctica as a
+              country and spotted that Congo was missing a continent listing in the
+              database. Thanks!
+            
 2004-01-15: 0.7
             * New sane() and make_sane() methods for Object.pm.
             * New languages_official() method for Country.pm.
