@@ -1,3 +1,6 @@
+2003-12-01: 0.31
+            * Added Language.pm to MANIFEST where it should have been.
+            
 2003-11-28: 0.3
             * Added a new module: Language.pm.
             * The database now contains a table of language-country mappings.

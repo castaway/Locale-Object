@@ -12,9 +12,11 @@ lib/Locale/Object/Country.pm
 lib/Locale/Object/Currency.pm
 lib/Locale/Object/DB.pm
 lib/Locale/Object/DB/Schemata.pm
+lib/Locale/Object/Language.pm
 lib/Locale/Object/locale.db
 t/00pod.t
 t/01db.t
 t/02country.t
 t/03currency.t
 t/04continent.t
+t/05language.t

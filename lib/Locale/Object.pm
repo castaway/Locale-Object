@@ -4,7 +4,7 @@ use strict;
 use warnings::register;
 use vars qw($VERSION);
 
-$VERSION = "0.3";
+$VERSION = "0.31";
 
 # Nobody home.
 
