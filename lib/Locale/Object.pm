@@ -3,14 +3,14 @@ package Locale::Object;
 use strict;
 use warnings::register;
 use vars qw($VERSION);
-use Carp qw(croak);
+use Carp;
 
 use Locale::Object::Continent;
 use Locale::Object::Country;
 use Locale::Object::Currency;
 use Locale::Object::Language;
 
-$VERSION = "0.54_02";
+$VERSION = "0.6";
 
 sub new
 {
@@ -210,49 +210,104 @@ sub sane
 #
 # UNFINISHED CODE: use at your own risk!
 #
+# There's a bit of ArrowAntiPattern here. Refactoring needed.
+
 sub make_sane
 {
-  my $self      = shift;
+  my $self   = shift;
+  my %params = @_;
+
+  # Internal attributes start with underscores.
+  my $internal_attribute = '_' . $params{attribute} if $params{attribute};
+
+  if ($params{attribute})
+  {
+    $self->_make_sane_by_attribute($params{attribute});
+  }
+  else
+  {
+    # ...
+  }
+  
+  if ($params{populate} == 1)
+  {
+    croak 'ERROR: cannot populate without an attribute to seed from.' unless $params{attribute};
+
+    croak 'ERROR: cannot populate against ', $params{attribute}, ' none has not been set.' unless $self->{$internal_attribute};
+
+    if ($params{attribute} eq 'country')
+    {
+      $self->_populate_currency;
+    }
+  }
+}
+
+# See warning above about unfinished code.
+sub _make_sane_by_attribute
+{
+  my $self = shift;
   my $attribute = shift;
 
   # Make a hash of valid attributes.
   my %allowed_attribs = map { $_ => undef } qw( country currency language );
-  
+
   croak "ERROR: attribute to make sane with ($attribute) unrecognized, must be one of 'country', 'currency', 'language'." unless exists $allowed_attribs{$attribute};
 
-  my $attribute_to_check = '_' . $attribute;
+  # Internal attributes start with underscores.
+  my $internal_attribute = '_' . $attribute;
+      
+  croak 'ERROR: can not make sane against ', $attribute, ' none has been set.' unless $self->{$internal_attribute};
   
-  croak "ERROR: Can not make sane against $attribute, none has been set." unless $self->{$attribute_to_check};
-
   # Make sane by country.
   if ($attribute eq 'country')
   {
-    $self->currency_code($self->{_country}->currency->code);
-
-    my @languages = $self->{_country}->languages;
-    
-    # Get the official language of the country in the country attribute, and set
-    # the language attribute to that.
-    foreach my $spoken (@languages)
-    {
-      $self->language_code_alpha3($spoken->code_alpha3) if $spoken->official($self->{_country}) eq 'true';
-    }
+    # Reset our currency if there is one.
+    $self->_populate_currency if $self->{_currency};
+  
+    # Reset our language if there is one.
+    $self->_populate_language if $self->{_language};
   }
-   
+     
   # Make sane by currency.
   elsif ($attribute eq 'currency')
   {
     # TBD
   }
-  
+    
   # Make sane by language.
   elsif ($attribute eq 'language')
   {
     # TBD
   }
+
+  $self;
 }
 
-# Small methods that set object attributes.
+sub _populate_currency
+{
+  my $self = shift;
+
+  $self->{_currency} = $self->{_country}->currency;
+  
+  $self;
+}
+
+sub _populate_language
+{
+  my $self = shift;
+  
+  my @languages = $self->{_country}->languages;
+        
+  # Get the official language of the country in the country attribute, and set
+  # the language attribute to that.
+  foreach my $spoken (@languages)
+  {
+    $self->language_code_alpha3($spoken->code_alpha3) if $spoken->official($self->{_country}) eq 'true';
+  }
+
+}
+
+# Small methods that set or get object attributes.
 # Will refactor these into an AUTOLOAD later.
 
 sub country_code_alpha2
@@ -336,6 +391,27 @@ sub language_name
   $self->{_language} = Locale::Object::Language->new( name => shift );
 }
 
+sub language
+{
+  my $self = shift;
+  
+  return $self->{_language};
+}
+
+sub country
+{
+  my $self = shift;
+  
+  return $self->{_country};
+}
+
+sub currency
+{
+  my $self = shift;
+  
+  return $self->{_currency};
+}
+
 1;
 
 __END__
@@ -346,7 +422,7 @@ Locale::Object - OO locale information
 
 =head1 VERSION
 
-0.54_01
+0.6
 
 =head1 DESCRIPTION
 
@@ -368,13 +444,11 @@ At present, the modules are:
 
 * L<Locale::Object::DB> - does lookups for the modules in the database
 
-* L<Locale::Object::DB::Schemata> - documents the database, including all data sources.
-
 * L<Locale::Object::Language> - objects representing languages
 
 =back
 
-For more information, see the documentation for those modules.
+For more information, see the documentation for those modules. The database is documented in docs/database.pod. Locale::Object itself can be used to create compound objects containing country, currency and language objects.
 
 =head1 SYNOPSIS
 
@@ -406,14 +480,41 @@ For more information, see the documentation for those modules.
                                   language_code_alpha2 => 'en'
                                  );
 
-
-This documentation is all TBD as of 0.54_01. Stay tuned.
+Creates a new object. With no parameters, the object will be blank. Valid parameters match the method names that follow.
 
 =head2 C<country_code_alpha2(), country_code_alpha3()>
 
+    $obj->country_code_alpha2('af');
+    $obj->country_code_alpha3('afg');
+
+Sets the country attribute in the object by alpha2 and alpha3 codes. Will create a new L<Locale::Object::Country> object and set that as the attribute. Because Locale::Object::Country objects all have single instances, if one has already been created by that code, it will be reused when you do this.
+ 
 =head2 C<country_code(), currency_code_numeric()>
 
+    $obj->currency_code('AFA');
+    $obj->currency_code_numeric('004');
+
+Serves the same purpose as the previous methods, only for the currency attribute, a L<Locale::Object::Currency> object.
+
 =head2 C<language_code_alpha2(), language_code_alpha3(), language_name()>
+
+    $obj->language_code_alpha2('ps');
+    $obj->language_code_alpha3('pus');
+    $obj->language_name('Pushto');
+
+Serves the same purpose as the previous methods, only for the language attribute, a L<Locale::Object::Language> object.
+
+=head1 Retrieving Attributes
+
+=head2 C<country(), language(), currency()>
+
+While the foregoing methods can be used to set attribute objects, to retrieve those objects' own attributes you will have to use their own methods. The C<country()>, C<language()> and C<currency()> methods return the objects stored as those attributes, if they exist.
+
+    my $country_tzone = $country->timezone->name;
+    my $language_name = $obj->language->name;
+    my $currency_code = $obj->currency->code;
+    
+See L<Locale::Object::Country>, L<Locale::Object::Language> and L<Locale::Object::Currency> for more details on the subordinate methods.
 
 =head1 AUTHOR
 

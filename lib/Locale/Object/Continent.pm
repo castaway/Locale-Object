@@ -11,7 +11,7 @@ use base qw( Locale::Object );
 use Locale::Object::Country;
 use Locale::Object::DB;
 
-$VERSION = "0.23";
+$VERSION = "0.24";
 
 my $db = Locale::Object::DB->new();
 
@@ -117,14 +117,8 @@ sub countries
   _set_countries($self) unless $self->{_countries};
 
   # Give an array if requested in array context, otherwise a reference.    
-  if (wantarray)
-  {
-    return @{$self->{_countries}};
-  }
-  else
-  {
-    return $self->{_countries};
-  }
+  return @{$self->{_countries}} if wantarray;
+  return $self->{_countries};
 }
 
 # Private method to set an attribute with an array of objects for all countries in this continent.
@@ -165,7 +159,7 @@ Locale::Object::Continent - continent information objects
 
 =head1 VERSION
 
-0.23
+0.24
 
 =head1 DESCRIPTION
 

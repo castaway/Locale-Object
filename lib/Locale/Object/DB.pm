@@ -8,7 +8,7 @@ use vars qw($VERSION);
 use DBI;
 use File::Spec;
 
-$VERSION = "0.31";
+$VERSION = "0.33";
 
 # The database should be in the same directory as this file. Get the location.
 my (undef, $path) = File::Spec->splitpath(__FILE__);
@@ -97,13 +97,12 @@ sub lookup_dual
 
 # Make a hash of allowed table names for searches.
 my %allowed_tables = map { $_ => 1 }
-  qw(continent country currency language language_mappings);
+  qw(continent country currency language language_mappings timezone);
   
 # Make a hash of allowed column names for searches.
 my %allowed_columns = map { $_ => 1 }
-  qw(country_code name name_native primary_language main_timezone 
-  uses_daylight_savings code code_numeric symbol subunit subunit_amount 
-  code_alpha2 code_alpha3 id country language official *);  
+  qw(country_code name name_native primary_language code code_numeric symbol subunit 
+  subunit_amount code_alpha2 code_alpha3 id country language official timezone is_default *);  
 
 # Sub for sanity check on search parameters. Does nothing except croak if an error is encountered.
 sub _check_search_params
@@ -136,7 +135,7 @@ Locale::Object::DB - do database lookups for Locale::Object modules
 
 =head1 VERSION
 
-0.31 - this refers also to the accompanying database file, and will be incremented if that is updated.
+0.33 - this refers also to the accompanying database file, and will be incremented if that is updated.
 
 =head1 DESCRIPTION
 
@@ -193,7 +192,7 @@ This module provides common functionality for the Locale::Object modules by doin
     
 C<lookup> will return a reference to an anonymous array of hashes. The hashes will contain the results for a query of the database for cells in $result_column in $table that are in a row that has $value in $search_column. Use '*' as a value for result_column if you want to retrieve whole rows.
 
-For information on what db tables are available and where the data came from, see L<Locale::Object::DB::Schemata>.
+For information on what db tables are available and where the data came from, see C<docs/database.pod>.
 
 IMPORTANT: The way of using this method has changed as of version 0.2, and in addition it supersedes the place formerly taken by C<lookup_all()>. Apologies for any inconvenience.
 

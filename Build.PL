@@ -9,6 +9,7 @@ Module::Build->new(
                    license        => 'perl',
                    requires       => {
                                       perl                              => '5.6.0',
+                                      DateTime::TimeZone                => 0.2505,
                                       DBI                               => 0,
                                       DBD::SQLite                       => 0,
                                       Scalar::Util                      => 1.10

@@ -4,7 +4,7 @@ Locale::Object - OO locale information
 
 VERSION
 
-0.5
+0.54_02
 
 DESCRIPTION
 
@@ -15,18 +15,16 @@ from several sources and provided in an accompanying DBD::SQLite database.
 At present, the modules are:
 
 * Locale::Object                      - make compound objects containing 
-                                        country, currency and language objects
+                                        country, currency & language objects
 * Locale::Object::Country             - objects representing countries
 * Locale::Object::Continent           - objects representing continents
 * Locale::Object::Currency            - objects representing currencies
 * Locale::Object::Currency::Converter - convert between currencies
-* Locale::Object::DB                  - does lookups for the modules in the db
-* Locale::Object::DB::Schemata        - documents the database, including all 
-                                        data sources.
+* Locale::Object::DB                  - does db lookups for the modules
 * Locale::Object::Language            - objects representing languages
 
-For more information, see the documentation for those modules.
-
+For more information, see the documentation for those modules. The database
+is documented in docs/database.pod.
 
 AUTHOR
 

@@ -13,7 +13,9 @@ use Locale::Object::Currency;
 use Locale::Object::Continent;
 use Locale::Object::Language;
 
-$VERSION = "0.32";
+use DateTime::TimeZone;
+
+$VERSION = "0.33";
 
 my $db = Locale::Object::DB->new();
 
@@ -36,7 +38,7 @@ sub init
   
   # Make a hash of valid parameters.
   my %allowed_params = map { $_ => undef }
-    qw(code_alpha2 code_alpha3 code_numeric name utc_offset_main utc_offsets_all);
+    qw(code_alpha2 code_alpha3 code_numeric name);
   
   # Go no further if the specified parameter wasn't one.
   croak "Error: You can only specify a country name, alpha2 code, alpha3 code or numeric code for initialization." unless exists $allowed_params{$parameter};
@@ -56,31 +58,40 @@ sub init
 
   # Look in the database for a match.
   my $result = $db->lookup(
-                                    table         => 'country',
-                                    result_column => '*',
-                                    search_column => $parameter,
-                                    value         => $value
-                                   );
+                           table         => 'country',
+                           result_column => '*',
+                           search_column => $parameter,
+                           value         => $value
+                          );
   
   croak "Error: Unknown $parameter given for initialization: $value" unless $result;
 
   if (defined @{$result}[0])
   {
     # Get the values from the result of our database query.
-    my $code_alpha2           = @{$result}[0]->{'code_alpha2'}; 
-    my $code_alpha3           = @{$result}[0]->{'code_alpha3'}; 
-    my $code_numeric          = @{$result}[0]->{'code_numeric'}; 
-    my $name                  = @{$result}[0]->{'name'};
-    my $dialing_code          = @{$result}[0]->{'dialing_code'};
-    my $utc_offset_main       = @{$result}[0]->{'utc_offset_main'};
-    my $utc_offsets_all       = @{$result}[0]->{'utc_offsets_all'};
+    my $code_alpha2           = $result->[0]->{'code_alpha2'}; 
+    my $code_alpha3           = $result->[0]->{'code_alpha3'}; 
+    my $code_numeric          = $result->[0]->{'code_numeric'}; 
+    my $name                  = $result->[0]->{'name'};
+    my $dialing_code          = $result->[0]->{'dialing_code'};
+
+    $result = $db->lookup_dual(
+                               table      => 'timezone',
+                               result_col => 'timezone',
+                               col_1      => 'country_code',
+                               val_1      => $code_alpha2,
+                               col_2      => 'is_default',
+                               val_2      => 'true'
+                              );
   
+    my $timezone = $result->[0]->{timezone};
+
     # Check for pre-existing objects. Return it if there is one.
     my $country = $self->exists($code_alpha2);
     return $country if $country;
   
     # If not, make a new object.
-    _make_country($self, $code_alpha2, $code_alpha3, $code_numeric, $name, $dialing_code, $utc_offset_main, $utc_offsets_all);
+    _make_country($self, $code_alpha2, $code_alpha3, $code_numeric, $name, $dialing_code, $timezone);
     
     # Register the new object.
     $self->register();
@@ -127,7 +138,7 @@ sub _make_country
   my $code = $attributes[0];
 
   # The attributes we want to set.
-  my @attr_names = qw(code_alpha2 code_alpha3 code_numeric name dialing_code utc_offset_main utc_offsets_all);
+  my @attr_names = qw(code_alpha2 code_alpha3 code_numeric name dialing_code timezone);
   
   # Initialize a loop counter.
   my $counter = 0;
@@ -166,18 +177,13 @@ sub languages
   # No name, no languages.
   return unless $self->{_name};
   
-  # Check for countries attribute. Set it if we don't have it.
+  # Check for languages attribute. Set it if we don't have it.
   _set_languages($self) unless $self->{_languages};
 
   # Give an array if requested in array context, otherwise a reference.    
-  if (wantarray)
-  {
-    return @{$self->{_languages}};
-  }
-  else
-  {
-    return $self->{_languages};
-  }
+  
+  return @{$self->{_languages}} if wantarray;
+  return $self->{_languages};
 }
 
 # Private method to set an attribute with an array of objects for all languages spoken in this country.
@@ -287,7 +293,7 @@ sub dialing_code
   }
 
   $self->{_dialing_code};
-}  
+}
 
 sub name
 {
@@ -302,31 +308,64 @@ sub name
   $self->{_name};
 }  
 
-sub utc_offset_main
+sub timezone
 {
   my $self = shift;  
   
   if (@_)
   {
-    $self->{_utc_offset_main} = shift;
+    my $timezone = shift;
+    $self->{_timezone} = DateTime::TimeZone->new( name => $timezone );
+
     return $self;
   }
 
-  $self->{_utc_offset_main};
+  $self->{_timezone};
 }  
 
-sub utc_offsets_all
+sub all_timezones
 {
   my $self = shift;  
-  
-  if (@_)
-  {
-    $self->{_utc_offsets_all} = shift;
-    return $self;
-  }
 
-  $self->{_utc_offsets_all};
-}  
+  # Get the country alpha2 code.
+  my $code = $self->code_alpha2;
+
+  # If the all_timezones attribute exists, return it.
+  if ($self->{_all_timezones})
+  {
+    return @{$self->{_all_timezones}} if wantarray;
+    return $self->{_all_timezones};
+  }
+  # Otherwise, set it.
+  else
+  {
+    # Get all time zones for the country code.
+    my $results = $db->lookup(
+                              table         => 'timezone',
+                              search_column => 'country_code',
+                              result_column => '*',
+                              value         => $code
+                             );
+    my @timezones;
+ 
+    foreach my $search_result (@{$results})
+    {
+      # Get the timezone from each result.
+      my $zone = $search_result->{timezone};
+    
+      # Make a new object.
+      my $tz_object = DateTime::TimeZone->new( name => $zone );
+      
+      # Stick it in an array.
+      push @timezones, $tz_object;
+    }
+
+    $self->{_all_timezones} = \@timezones;
+
+    return @{$self->{_all_timezones}} if wantarray;
+    return $self->{_all_timezones};
+  }
+}
 
 1;
 
@@ -359,6 +398,9 @@ C<Locale::Object::Country> allows you to create objects containing information a
 
     my @languages    = $country->languages;
 
+    my $timezone     = $country->timezone;
+    my @allzones     = @{$country->all_timezones};
+    
 =head1 METHODS
 
 =head2 C<new()>
@@ -369,7 +411,7 @@ The C<new> method creates an object. It takes a single-item hash as an argument 
 
 The objects created are singletons; if you try and create a country object when one matching your specification already exists, C<new()> will return the original one.
 
-=head2 C<code_alpha2(), code_alpha(), code_numeric(), name(), dialing_code(), utc_offset_main(), utc_offsets_all()>
+=head2 C<code_alpha2(), code_alpha(), code_numeric(), name(), dialing_code()>
 
     my $name = $country->name;
     
@@ -398,6 +440,20 @@ Returns an array of L<Locale::Object::Language> objects in array context, or a r
     }
 
 If you use the C<official()> method of a L<Locale::Object::Language> object on a country object, it will return a boolean value describing whether the language is official in that country.
+
+=head2 C<timezone()>
+
+    my $timezone = $country->timezone;
+    
+This method will return you a L<DateTime::TimeZone> object corresponding with the time zone in the capital of the country your object represents. See the documentation for that module to see what methods it provides; as a simple example:
+
+    my $timezone_name = $timezone->name;
+
+=head2 C<all_timezones()>
+
+    my @allzones     = @{$country->all_timezones};
+
+This method will return an array or array reference, depending on context, of L<DateTime::TimeZone> objects for all time zones that occur in the country your object represents. In most cases this will be only one, and in some cases it will be quite a few (for example, the US, Canada, and Russian Federation).
 
 =head1 AUTHOR
 

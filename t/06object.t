@@ -76,7 +76,10 @@ is( $obj->sane('currency'), 0, 'Object is addled according to currency' );
 #13
 is( $obj->sane('language'), 0, 'Object is addled according to language' );
 
-$obj->make_sane('country');
+$obj->make_sane(
+                attribute => 'country',
+                populate  => 1
+               );
 
 #14
 is( $obj->sane('country'), 1, 'Object was made sane by country' );

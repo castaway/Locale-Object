@@ -30,6 +30,10 @@ my $amount = 5;
 # network conditions. We want to indicate success/failure but not actually
 # kill the tests.
 
+# We can hide any warnings (like the ones Finance::Currency::Convert::XE chucks
+# out from time to time about a currency not being available) - this is only a test.
+local $SIG{__WARN__} = sub {};
+
 SKIP:
 {
   skip 'Finance::Currency::Convert::XE not installed', 1 unless $converter->use_xe == 1;

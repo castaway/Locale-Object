@@ -25,15 +25,9 @@ is( $afghanistan->code_numeric, '004', 'it has the correct numeric code');
 is( $afghanistan->dialing_code, '93', 'it has the right dialing code');
 
 #6
-is( $afghanistan->utc_offset_main, '4.5', 'it has the right main UTC offset');
-
-#7
-is( $afghanistan->utc_offsets_all, '4.5', 'it has the right seletion of UTC offsets');
-
-#8
 is( $afghanistan->currency->name, 'afghani', 'it has the correct currency');
 
-#9
+#7
 is( $afghanistan->continent->name, 'Asia', "it's on the correct continent");
 
 my %countries;
@@ -46,15 +40,18 @@ foreach my $where ($afghanistan->continent->countries)
   $countries{$where_code} = undef;
 }
 
-#10
+#8
 ok( exists $countries{'tj'}, 'it has a correct neighbor on its continent');
 
 my $copy = Locale::Object::Country->new( code_alpha2 => 'af' );
 
-#11
+#9
+is( $afghanistan->timezone->name, 'Asia/Kabul', 'it had the right timezone');
+
+#10
 ok( $copy eq $afghanistan, 'the object is a singleton');
 
-#12
+#11
 is( ($afghanistan->languages)[0]->name, 'Pushto', 'a correct language is spoken in it');
 
 my ($wrong, $wrong_defined);
@@ -69,8 +66,13 @@ my ($wrong, $wrong_defined);
 
 defined $wrong ? $wrong_defined = 1 : $wrong_defined = 0;
 
-#13
+#12
 is( $wrong_defined, 0, 'an object was not made for an incorrect code' );
+
+my $britain = Locale::Object::Country->new( code_alpha2 => 'gb' );
+
+#13
+ok( $britain->all_timezones->[0]->name eq 'Europe/London' && $britain->all_timezones->[1]->name eq 'Europe/Belfast', 'all_timezones gave the right list');
 
 # Remove __END__ to get a dump of the data structures created by this test.
 __END__
