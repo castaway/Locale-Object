@@ -1,3 +1,8 @@
+2003-12-30: 0.54_02
+            * Converter.pm only "carp"s now, not "croak"s, when required modules 
+              are missing.
+            * Fixed broken version number for Scalar::Util in Build.PL.
+            
 2003-12-29: 0.54_01
             * Locale::Object itself now has functionality: creating compound
               objects that can contain country, currency and language objects.

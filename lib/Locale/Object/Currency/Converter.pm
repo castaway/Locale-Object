@@ -2,7 +2,7 @@ package Locale::Object::Currency::Converter;
 
 use strict;
 use warnings::register;
-use Carp qw(croak);
+use Carp;
 use vars qw($VERSION);
 
 use Scalar::Util qw(looks_like_number);
@@ -101,19 +101,36 @@ sub service
   my $self = shift;
   my $service = shift;
   
+  # Be generous in what we accept.
   $service = lc($service);
     
   if ($service eq 'xe')
   {
-    croak "ERROR: Cannot set service to XE: $xe_error" unless $use_xe == 1;
+    # Check that we can use Finance::Currency::Convert::XE.
+    if ($use_xe == 1)
+    {
+      return $self;
+    }
+    else
+    {
+      carp "WARNING: Cannot set service to XE: $xe_error";
+    }
   }
   elsif ($service eq 'yahoo')
   {
-    croak "ERROR: Cannot set service to Yahoo: $yahoo_error" unless $use_yahoo == 1;
+    # Check that we can use Finance::Currency::Convert::Yahoo.
+    if ($use_yahoo == 1)
+    {
+      return $self;
+    }
+    else
+    {
+      carp "WARNING: Cannot set service to Yahoo: $yahoo_error";
+    }
   }
   else
   {
-    croak "ERROR: Values for service can be 'XE' or 'Yahoo' (case-insensitive); you said '$service'.";
+    carp "ERROR: Values for service can be 'XE' or 'Yahoo' (case-insensitive); you said '$service'.";
   }
   
   $self->{service} = $service;

@@ -11,7 +11,7 @@ Module::Build->new(
                                       perl                              => '5.6.0',
                                       DBI                               => 0,
                                       DBD::SQLite                       => 0,
-                                      Scalar::Util                      => 0.10
+                                      Scalar::Util                      => 1.10
                                      },
                    build_requires => {
                                       Module::Build => '0.21',
