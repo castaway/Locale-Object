@@ -4,7 +4,7 @@ use strict;
 use warnings::register;
 use vars qw($VERSION);
 
-$VERSION = "0.41";
+$VERSION = "0.5";
 
 # Nobody home.
 
@@ -23,7 +23,7 @@ Locale::Object - OO locale information
 
 =head1 VERSION
 
-0.41
+0.5
 
 =head1 DESCRIPTION
 
@@ -38,6 +38,8 @@ At present, the modules are:
 * L<Locale::Object::Continent> - objects representing continents
 
 * L<Locale::Object::Currency> - objects representing currencies
+
+* L<Locale::Object::Currency::Converter>  - convert between currencies
 
 * L<Locale::Object::DB> - does lookups for the modules in the database
 

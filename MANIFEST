@@ -10,6 +10,7 @@ lib/Locale/Object.pm
 lib/Locale/Object/Continent.pm
 lib/Locale/Object/Country.pm
 lib/Locale/Object/Currency.pm
+lib/Locale/Object/Currency/Converter.pm
 lib/Locale/Object/DB.pm
 lib/Locale/Object/DB/Schemata.pm
 lib/Locale/Object/Language.pm
@@ -20,3 +21,4 @@ t/02country.t
 t/03currency.t
 t/04continent.t
 t/05language.t
+t/06convert.t

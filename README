@@ -4,7 +4,7 @@ Locale::Object - OO locale information
 
 VERSION
 
-0.3
+0.5
 
 DESCRIPTION
 
@@ -14,13 +14,14 @@ from several sources and provided in an accompanying DBD::SQLite database.
 
 At present, the modules are:
 
-* Locale::Object::Country      - objects representing countries
-* Locale::Object::Continent    - objects representing continents
-* Locale::Object::Currency     - objects representing currencies
-* Locale::Object::DB           - does lookups for the modules in the db
-* Locale::Object::DB::Schemata - documents the database, including all 
-                                 data sources.
-* Locale::Object::Language     - objects representing languages
+* Locale::Object::Country             - objects representing countries
+* Locale::Object::Continent           - objects representing continents
+* Locale::Object::Currency            - objects representing currencies
+* Locale::Object::Currency::Converter - convert between currencies
+* Locale::Object::DB                  - does lookups for the modules in the db
+* Locale::Object::DB::Schemata        - documents the database, including all 
+                                        data sources.
+* Locale::Object::Language            - objects representing languages
 
 For more information, see the documentation for those modules. Forthcoming 
 releases will include Locale::Object::Timezone.
