@@ -9,7 +9,7 @@ use Locale::Object::DB;
 use Locale::Object::Currency;
 use Locale::Object::Continent;
 
-$VERSION = "0.1";
+$VERSION = "0.11";
 
 my $db = Locale::Object::DB->new();
 
@@ -191,7 +191,7 @@ Locale::Object::Country - OO locale information for countries
 
 =head1 VERSION
 
-0.1
+0.11
 
 =head1 DESCRIPTION
 

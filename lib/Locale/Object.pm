@@ -1,17 +1,16 @@
 package Locale::Object;
 
-use warnings;
 use strict;
-use Carp qw(croak);
+use warnings::register;
 use vars qw($VERSION);
 
-$VERSION = "0.1";
+$VERSION = "0.11";
 
 # Nobody home.
 
 sub new
 {
-  return "This module is a placeholder for the top level of the Locale::Object namespace; it contains documentation only. For functionality, please use Locale::Object::Country, Locale::Object::Continent, Locale::Object::Currency or Locale::Object::DB.";
+  return "This module is a placeholder for the top level of the Locale::Object namespace; it contains documentation only. For functionality, please use one of the associated modules. See perldoc Locale::Object for more information.";
 }
 
 1;
@@ -24,7 +23,7 @@ Locale::Object - OO locale information
 
 =head1 VERSION
 
-0.1
+0.11
 
 =head1 DESCRIPTION
 

@@ -1,5 +1,11 @@
 package Locale::Object::DB::Schemata
 
+use strict;
+use warnings::register;
+use vars qw($VERSION);
+
+$VERSION = "0.11";
+
 # DO NOT LEAVE IT IS NOT REAL
 
 sub new
@@ -17,7 +23,7 @@ Locale::Object::DB::Schemata - schema documentation for the Locale::Object datab
 
 =head1 VERSION
 
-0.1
+0.11
 
 =head1 DESCRIPTION
 

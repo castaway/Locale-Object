@@ -14,6 +14,7 @@ Module::Build->new(
                                      },
                    build_requires => {
                                       Module::Build => '0.21',
-                                      Test::More    => 0
+                                      Test::More    => 0,
+                                      Test::Pod     => 0
                                      }
                   )->create_build_script;

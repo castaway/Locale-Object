@@ -8,7 +8,7 @@ use vars qw($VERSION);
 use DBI;
 use File::Spec;
 
-$VERSION = "0.1";
+$VERSION = "0.11";
 
 # The database should be in the same directory as this file. Get the location.
 my (undef, $path) = File::Spec->splitpath(__FILE__);
@@ -128,7 +128,7 @@ Locale::Object::DB - do database lookups for Locale::Object modules
 
 =head1 VERSION
 
-0.1
+0.11
 
 =head1 DESCRIPTION
 
@@ -180,7 +180,7 @@ For information on what db tables are available and where the data came from, se
 
 =head1 NOTES
 
-Because the database file isn't a Perl file, L<Module::Build> won't copy it into the blib directory at the C<./Build test> stage, and  To get around this, C<Locale::Object::DB> installs the database into the same directory as itself, and makes a symlink to the database in /tmp (unless one exists already) which the 
+The database file itself is named C<locale.db> and must reside in the same directory as this module. If it's not present, the module will croak with a fatal error.
 
 =head1 AUTHOR
 

@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name: Locale-Object
-version: 0.1
+version: 0.11
 license: perl
 distribution_type: module
 requires:
@@ -11,23 +11,25 @@ recommends: {}
 build_requires:
   Module::Build: 0.21
   Test::More: 0
+  Test::Pod: 0
 conflicts: {}
 provides:
   Locale::Object:
     file: lib/Locale/Object.pm
-    version: 0.1
+    version: 0.11
   Locale::Object::Continent:
     file: lib/Locale/Object/Continent.pm
-    version: 0.1
+    version: 0.11
   Locale::Object::Country:
     file: lib/Locale/Object/Country.pm
-    version: 0.1
+    version: 0.11
   Locale::Object::Currency:
     file: lib/Locale/Object/Currency.pm
-    version: 0.1
+    version: 0.11
   Locale::Object::DB:
     file: lib/Locale/Object/DB.pm
-    version: 0.1
+    version: 0.11
   Locale::Object::DB::Schemata:
     file: lib/Locale/Object/DB/Schemata.pm
+    version: 0.11
 generated_by: Module::Build version 0.21

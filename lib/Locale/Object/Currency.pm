@@ -8,7 +8,7 @@ use vars qw($VERSION);
 use Locale::Object::Country;
 use Locale::Object::DB;
 
-$VERSION = "0.1";
+$VERSION = "0.11";
 
 my $db = Locale::Object::DB->new();
 
@@ -214,7 +214,7 @@ Locale::Object::Currency - currency information objects
 
 =head1 VERSION
 
-0.1
+0.11
 
 =head1 DESCRIPTION
 
