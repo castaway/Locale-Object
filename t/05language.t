@@ -41,7 +41,7 @@ my $wel = Locale::Object::Language->new( code_alpha3 => 'wel' );
 is( $eng->official($gb), 'true', "it's official in the correct country" );
 
 #8
-is( $wel->official($gb), 'false', "a secondary language isn't official in the correct country" );
+is( $wel->official($gb), 'false', "a secondary language isn't official" );
 
 # Remove __END__ to get a dump of the data structures created by this test.
 __END__

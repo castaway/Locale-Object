@@ -4,7 +4,7 @@ use strict;
 use warnings::register;
 use vars qw($VERSION);
 
-$VERSION = "0.2";
+$VERSION = "0.3";
 
 # DO NOT LEAVE IT IS NOT REAL
 
@@ -23,7 +23,7 @@ Locale::Object::DB::Schemata - schema documentation for the Locale::Object datab
 
 =head1 VERSION
 
-0.2
+0.3
 
 =head1 DESCRIPTION
 
@@ -40,17 +40,15 @@ The database of locale information used by the Locale::Object modules uses L<DBD
         code_alpha3           char(3),
         code_numeric          smallint,
         name                  char(100),
-        name_native           char(100),
-        primary_language      char(3),
-        main_timezone         tinyint,
-        uses_daylight_savings char(3),
+        dialing_code          smallint,
         PRIMARY KEY           (code_alpha2)
     );
 
 =over 4
 
 * C<code_alpha2> , C<code_alpha3>, C<code_numeric> and C<name> are data from ISO 3166 - see L<http://ftp.ics.uci.edu/pub/ietf/http/related/iso3166.txt>.
-* C<name_native>, C<primary_language>, C<main_timezone> and C<uses_daylight_savings> are currently empty, but will be utilized in a forthcoming release of these modules.
+
+* C<dialing_code> is an International Direct Dialing code - see L<http://kropla.com/dialcode.htm>.
 
 =back
 
@@ -67,11 +65,15 @@ The database of locale information used by the Locale::Object modules uses L<DBD
         PRIMARY KEY  (country_code)
     );
 
+=over 4
+
 * C<country_code> contains ISO 3166 two-letter country codes, as in the previous table.
 
 * C<name> and C<code> contain ISO 4217 three-letter codes and names for world currencies - see L<http://fx.sauder.ubc.ca/iso4217.html>.
 
 * C<symbol>, C<subunit> and C<subunit_amount> contain currency symbols, subunits (such as cents) and the amounts of subunits that comprise a single currency unit (such as 100 [cents in a dollar]). This data was sourced from L<http://fx.sauder.ubc.ca/currency_table.html>.
+
+=back
 
 =head2 the 'continent' table
     
@@ -81,7 +83,11 @@ The database of locale information used by the Locale::Object modules uses L<DBD
         PRIMARY KEY  (country_code)
     );
 
+=over 4
+
 * C<country_code> contains ISO 3166 two-letter codes again, and C<name> contains associated continent names (Africa, Asia, Europe, North America, Oceania and South America). Sourced from L<http://www.worldatlas.com/cntycont.htm>.
+
+=back
 
 =head2 the 'language' table
     

@@ -10,7 +10,7 @@ use Locale::Object::Currency;
 use Locale::Object::Continent;
 use Locale::Object::Language;
 
-$VERSION = "0.2";
+$VERSION = "0.3";
 
 my $db = Locale::Object::DB->new();
 
@@ -66,16 +66,14 @@ sub init
   my $code_alpha3           = @{$result}[0]->{'code_alpha3'}; 
   my $code_numeric          = @{$result}[0]->{'code_numeric'}; 
   my $name                  = @{$result}[0]->{'name'};
-  my $name_native           = @{$result}[0]->{'name_native'};
-  my $main_timezone         = @{$result}[0]->{'main_timezone'};
-  my $uses_daylight_savings = @{$result}[0]->{'uses_daylight_savings'};
+  my $dialing_code          = @{$result}[0]->{'dialing_code'};
 
   # Check for pre-existing objects. Return it if there is one.
   my $country = $self->exists($code_alpha2);
   return $country if $country;
 
   # If not, make a new object.
-  _make_country($self, $code_alpha2, $code_alpha3, $code_numeric, $name, $name_native, $main_timezone, $uses_daylight_savings);
+  _make_country($self, $code_alpha2, $code_alpha3, $code_numeric, $name, $dialing_code);
   
   # Register the new object.
   $self->register();
@@ -116,7 +114,7 @@ sub _make_country
   my $code = $attributes[0];
 
   # The attributes we want to set.
-  my @attr_names = qw(_code_alpha2 _code_alpha3 _code_numeric _name _name_native _main_timezone _uses_daylight_savings);
+  my @attr_names = qw(_code_alpha2 _code_alpha3 _code_numeric _name _dialing_code);
   
   # Initialize a loop counter.
   my $counter = 0;
@@ -126,7 +124,6 @@ sub _make_country
   {      
     # set it on the object.
     $self->{$current_attribute} = $attributes[$counter];
-
     $counter++; 
   }
 
@@ -226,10 +223,10 @@ sub currency
   $self->{_currency};
 }
 
-sub main_timezone
+sub dialing_code
 {
   my $self = shift;  
-  $self->{_main_timezone};
+  $self->{_dialing_code};
 }  
 
 sub name
@@ -238,17 +235,6 @@ sub name
   $self->{_name};
 }  
 
-sub name_native
-{
-  my $self = shift;  
-  $self->{_name_native};
-}  
-
-sub uses_daylight_savings
-{
-  my $self = shift;  
-  $self->{_uses_daylight_savings};
-}  
 
 1;
 
@@ -256,11 +242,11 @@ __END__
 
 =head1 NAME
 
-Locale::Object::Country - OO locale information for countries
+Locale::Object::Country - country information objects
 
 =head1 VERSION
 
-0.2
+0.3
 
 =head1 DESCRIPTION
 
@@ -272,13 +258,14 @@ C<Locale::Object::Country> allows you to create objects containing information a
     
     my $country = Locale::Object::Country->new( code_alpha2 => 'af' );
     
-    my $name        = $country->name;         # 'Afghanistan'
-    my $code_alpha3 = $country->code_alpha3;  # 'afg'
+    my $name         = $country->name;         # 'Afghanistan'
+    my $code_alpha3  = $country->code_alpha3;  # 'afg'
+    my $dialing_code = $country->dialing_code; # '93'
     
-    my $currency    = $country->currency;
-    my $continent   = $country->continent;
+    my $currency     = $country->currency;
+    my $continent    = $country->continent;
 
-    my @languages   = $country->languages;
+    my @languages    = $country->languages;
 
 =head1 METHODS
 
@@ -290,7 +277,7 @@ The C<new> method creates an object. It takes a single-item hash as an argument 
 
 The objects created are singletons; if you try and create a country object when one matching your specification already exists, C<new()> will return the original one.
 
-=head2 C<code_alpha2(), code_alpha(), code_numeric(), name(), name_native(), main_timezone(), uses_daylight_savings()>
+=head2 C<code_alpha2(), code_alpha(), code_numeric(), name(), dialing_code()>
 
     my $name = $country->name;
     
@@ -317,6 +304,8 @@ Returns an array of L<Locale::Object::Language> objects in array context, or a r
     {
       print $lang->name, "\n";
     }
+
+If you use the C<official()> method of a L<Locale::Object::Language> object on a country object, it will return a boolean value describing whether the language is official in that country.
 
 =head1 AUTHOR
 

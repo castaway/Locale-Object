@@ -1,3 +1,13 @@
+2003-12-09: 0.4
+            * Added dialing_codes column to the the country table in the db
+              and populated it with international dialing codes. 
+            * Added dialing_code method to Country.pm.
+            * Removed unused name_native, main_timezone and 
+              uses_daylight_savings columns from the db, their 
+              associated methods in Country.pm and listings in Schemata.pm.
+            * Added a couple of spots of missing POD markup to Schemata.pm.
+            * Updated two slightly out-of-date error messages in DB.pm.
+            
 2003-12-01: 0.31
             * Added Language.pm to MANIFEST where it should have been.
             

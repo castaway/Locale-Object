@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 9;
+use Test::More tests => 10;
 
 use Locale::Object::Country;
 
@@ -22,10 +22,13 @@ is( $afghanistan->name, 'Afghanistan', 'it has the correct country name');
 is( $afghanistan->code_alpha3, 'afg', 'it has the correct 3-letter code');
 
 #5
-is( $afghanistan->currency->name, 'afghani', 'it has the correct currency');
+is( $afghanistan->dialing_code, '93', 'it has the right dialing code');
 
 #6
-is( $afghanistan->continent->name, 'Asia',   "it's on the correct continent");
+is( $afghanistan->currency->name, 'afghani', 'it has the correct currency');
+
+#7
+is( $afghanistan->continent->name, 'Asia', "it's on the correct continent");
 
 my %countries;
 
@@ -37,15 +40,15 @@ foreach my $where ($afghanistan->continent->countries)
   $countries{$where_code} = undef;
 }
 
-#7
+#8
 ok( exists $countries{'tj'}, 'it has a correct neighbor on its continent');
 
 my $copy = Locale::Object::Country->new( code_alpha2 => 'af' );
 
-#8
+#9
 ok( $copy eq $afghanistan, 'the object is a singleton');
 
-#9
+#10
 is( ($afghanistan->languages)[0]->name, 'Pushto', 'a correct language is spoken in it');
 
 # Remove __END__ to get a dump of the data structures created by this test.

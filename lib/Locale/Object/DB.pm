@@ -8,7 +8,7 @@ use vars qw($VERSION);
 use DBI;
 use File::Spec;
 
-$VERSION = "0.2";
+$VERSION = "0.3";
 
 # The database should be in the same directory as this file. Get the location.
 my (undef, $path) = File::Spec->splitpath(__FILE__);
@@ -65,7 +65,7 @@ sub lookup
   # Croak if any of them are missing.
   for (0..$#required)
   {
-    croak "Error: could not do lookup_arrayref: no '$required[$_]' specified." unless defined($params{$required[$_]});
+    croak "Error: could not do lookup: no '$required[$_]' specified." unless defined($params{$required[$_]});
   }
 
   # Validate parameters.
@@ -94,7 +94,7 @@ sub lookup_dual
   # Croak if any of them are missing.
   for (0..$#required)
   {
-    croak "Error: could not do lookup_arrayref: no '$required[$_]' specified." unless defined($params{$required[$_]});
+    croak "Error: could not do lookup_dual: no '$required[$_]' specified." unless defined($params{$required[$_]});
   }
 
   # Validate parameters.
@@ -155,7 +155,7 @@ Locale::Object::DB - do database lookups for Locale::Object modules
 
 =head1 VERSION
 
-0.2 - this refers also to the accompanying database file, and will be incremented if that is updated.
+0.3 - this refers also to the accompanying database file, and will be incremented if that is updated.
 
 =head1 DESCRIPTION
 
@@ -214,7 +214,7 @@ C<lookup> will return a reference to an anonymous array of hashes. The hashes wi
 
 For information on what db tables are available and where the data came from, see L<Locale::Object::DB::Schemata>.
 
-IMPORTANT: The way of using this method has changed as of version 0.2. It now supersedes the place formerly taken by C<lookup_all()>, in addition to being used in its former fashion. Apologies for any inconvenience.
+IMPORTANT: The way of using this method has changed as of version 0.2, and in addition it supersedes the place formerly taken by C<lookup_all()>. Apologies for any inconvenience.
 
 =head2 C<lookup_dual()>
 
@@ -227,8 +227,7 @@ IMPORTANT: The way of using this method has changed as of version 0.2. It now su
                                   val_2      => $second_search_value
                                  );
 
-C<lookup_dual> will return a reference to an anonymous array of hashes. The hashes will contain the results for a query of the database for cells in $result_column in $table that are in a row that has two specified values in two specified columns. Use '*' as a value for result_column if you want to retrieve whole rows.
-
+C<lookup_dual> will return a reference to an anonymous array of hashes. The hashes will contain the results for a query of the database for cells in C<$result_column> in C<$table> that are in a row that has two specified values in two specified columns. Use '*' as a value for C<$result_column> if you want to retrieve whole rows.
                                  
 =head1 NOTES
 
