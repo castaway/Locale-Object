@@ -274,10 +274,6 @@ __END__
 
 Locale::Object::Currency - currency information objects
 
-=head1 VERSION
-
-0.23
-
 =head1 DESCRIPTION
 
 C<Locale::Object::Country> allows you to create objects containing information about countries such as their ISO codes, currencies and so on.

@@ -1,3 +1,9 @@
+2004-01-15: 0.7
+            * New sane() and make_sane() methods for Object.pm.
+            * New languages_official() method for Country.pm.
+            * Fixed a broken error message in Language.pm.
+            * Fixed list markup in database.pod.
+
 2004-01-06: 0.6
             * New timezone() and all_timezones() methods for Country.pm that
               interface with DateTime::TimeZone.

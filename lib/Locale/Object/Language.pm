@@ -11,7 +11,7 @@ use base qw( Locale::Object );
 use Locale::Object::Country;
 use Locale::Object::DB;
 
-$VERSION = "0.13";
+$VERSION = "0.131";
 
 my $db = Locale::Object::DB->new();
 
@@ -225,8 +225,8 @@ sub code_alpha3
 
 sub official
 {
-  my $self  = shift;
-  my $where = shift;
+  my $self      = shift;
+  my $where     = shift;
   my $selected  = $self->code_alpha3;
     
   croak "Error: you can only pass official() a Locale::Object::Country object." unless $where->isa('Locale::Object::Country');
@@ -241,7 +241,7 @@ sub official
   
   my %used_langs = map { $_->code_alpha3 => $_ } @langs;
 
-  return "Language $selected is not used in $where->name." unless exists $used_langs{$selected};
+  croak qq{ERROR: Language "$selected" is not used in } . $where->name . '.' unless exists $used_langs{$selected};
 
   my $result = $db->lookup_dual(
                               table      => 'language_mappings', 
@@ -262,10 +262,6 @@ __END__
 =head1 NAME
 
 Locale::Object::Language - language information objects
-
-=head1 VERSION
-
-0.13
 
 =head1 DESCRIPTION
 

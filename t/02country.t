@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 13;
+use Test::More tests => 14;
 
 use Locale::Object::Country;
 
@@ -54,6 +54,9 @@ ok( $copy eq $afghanistan, 'the object is a singleton');
 #11
 is( ($afghanistan->languages)[0]->name, 'Pushto', 'a correct language is spoken in it');
 
+#12
+is( ($afghanistan->languages_official)[0]->name, 'Pushto', 'the official language is correct');
+ 
 my ($wrong, $wrong_defined);
 
 {
@@ -66,12 +69,12 @@ my ($wrong, $wrong_defined);
 
 defined $wrong ? $wrong_defined = 1 : $wrong_defined = 0;
 
-#12
+#13
 is( $wrong_defined, 0, 'an object was not made for an incorrect code' );
 
 my $britain = Locale::Object::Country->new( code_alpha2 => 'gb' );
 
-#13
+#14
 ok( $britain->all_timezones->[0]->name eq 'Europe/London' && $britain->all_timezones->[1]->name eq 'Europe/Belfast', 'all_timezones gave the right list');
 
 # Remove __END__ to get a dump of the data structures created by this test.

@@ -2,10 +2,6 @@ NAME
 
 Locale::Object - OO locale information
 
-VERSION
-
-0.54_02
-
 DESCRIPTION
 
 The Locale::Object group of modules attempts to provide locale-related 

@@ -290,10 +290,6 @@ __END__
 
 Locale::Object::Currency::Converter - convert between currencies
 
-=head1 VERSION
-
-0.12
-
 =head1 DESCRIPTION
 
 C<Locale::Object::Currency::Converter> allows you to convert between values of currencies represented by L<Locale::Object::Currency> objects.

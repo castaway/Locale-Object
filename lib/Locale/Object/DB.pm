@@ -133,10 +133,6 @@ __END__
 
 Locale::Object::DB - do database lookups for Locale::Object modules
 
-=head1 VERSION
-
-0.33 - this refers also to the accompanying database file, and will be incremented if that is updated.
-
 =head1 DESCRIPTION
 
 This module provides common functionality for the Locale::Object modules by doing lookups in the database that comes with them (which uses L<DBD::SQLite>).

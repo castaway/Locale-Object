@@ -3,7 +3,7 @@
 use warnings::register;
 use strict;
 
-use Test::More tests => 14;
+use Test::More tests => 18;
 
 use Locale::Object;
 
@@ -76,13 +76,51 @@ is( $obj->sane('currency'), 0, 'Object is addled according to currency' );
 #13
 is( $obj->sane('language'), 0, 'Object is addled according to language' );
 
+$obj->language_name('Swedish');
+$obj->country_name('United Kingdom');
+$obj->currency_code('LYD');
+
 $obj->make_sane(
-                attribute => 'country',
                 populate  => 1
                );
 
+#15
+is( $obj->sane('country'), 1, 'Object was made sane without attribute parameter' );
+
+$obj->make_sane(
+                attribute => 'country',
+               );
+               
 #14
 is( $obj->sane('country'), 1, 'Object was made sane by country' );
+
+$obj->language_name('Danish');
+$obj->country_name('Uganda');
+$obj->currency_code('IDR');
+
+$obj->make_sane(
+                attribute => 'language'
+               );
+
+#16
+is( $obj->sane('language'), 1, 'Object was made sane by language' );
+
+$obj->language_name('Dzongkha');
+$obj->currency_code('THB');
+$obj->empty('country');
+
+#17
+is( $obj->{_country}, undef, 'Emptying an attribute was successful' );
+
+$obj->make_sane(
+                attribute => 'currency'
+               );
+
+#18
+is( $obj->sane('currency'), 1, 'Object was made sane by currency' );
+
+$obj->language_name('Azerbaijani');
+$obj->country_name('Portugal');
 
 # Remove __END__ to get a dump of the data structures created by this test.
 __END__

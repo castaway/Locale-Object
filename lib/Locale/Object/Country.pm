@@ -15,7 +15,7 @@ use Locale::Object::Language;
 
 use DateTime::TimeZone;
 
-$VERSION = "0.33";
+$VERSION = "0.34";
 
 my $db = Locale::Object::DB->new();
 
@@ -181,9 +181,31 @@ sub languages
   _set_languages($self) unless $self->{_languages};
 
   # Give an array if requested in array context, otherwise a reference.    
-  
   return @{$self->{_languages}} if wantarray;
   return $self->{_languages};
+}
+
+# Method for retrieving the official language(s) of this country.
+sub languages_official
+{
+  my $self = shift;
+
+  # No name, no languages.
+  return unless $self->{_name};
+  
+  # Check for languages attribute. Set it if we don't have it.
+  _set_languages($self) unless $self->{_languages};
+  
+  my @official_languages;
+
+  foreach ($self->languages)
+  {
+    push (@official_languages, $_) if $_->official($self) eq 'true';
+  }
+  
+  # Give an array if requested in array context, otherwise a reference.      
+  return @official_languages if wantarray;
+  return \@official_languages;
 }
 
 # Private method to set an attribute with an array of objects for all languages spoken in this country.
@@ -375,10 +397,6 @@ __END__
 
 Locale::Object::Country - country information objects
 
-=head1 VERSION
-
-0.32
-
 =head1 DESCRIPTION
 
 C<Locale::Object::Country> allows you to create objects containing information about countries such as their ISO codes, currencies and so on.
@@ -397,7 +415,8 @@ C<Locale::Object::Country> allows you to create objects containing information a
     my $continent    = $country->continent;
 
     my @languages    = $country->languages;
-
+    my @official     = $country->languages_official;
+    
     my $timezone     = $country->timezone;
     my @allzones     = @{$country->all_timezones};
     
@@ -411,7 +430,7 @@ The C<new> method creates an object. It takes a single-item hash as an argument 
 
 The objects created are singletons; if you try and create a country object when one matching your specification already exists, C<new()> will return the original one.
 
-=head2 C<code_alpha2(), code_alpha(), code_numeric(), name(), dialing_code()>
+=head2 C<code_alpha2(), code_alpha3(), code_numeric(), name(), dialing_code()>
 
     my $name = $country->name;
     
@@ -428,18 +447,18 @@ See the documentation for those two modules for a listing of currency and contin
 
 Note: More attributes will be added in a future release; see L<Locale::Object::DB::Schemata> for a full listing of the contents of the database.
     
-=head2 C<languages()>
+=head2 C<languages(), languages_official()>
 
     my @languages = $country->languages;
 
-Returns an array of L<Locale::Object::Language> objects in array context, or a reference in scalar context. The objects have their own attribute methods, so you can do things like this:
+C<languages()> returns an array of L<Locale::Object::Language> objects in array context, or a reference in scalar context. The objects have their own attribute methods, so you can do things like this:
 
     foreach my $lang (@languages)
     {
       print $lang->name, "\n";
     }
 
-If you use the C<official()> method of a L<Locale::Object::Language> object on a country object, it will return a boolean value describing whether the language is official in that country.
+C<languages_official()> does much the same thing, but only gives languages that are official in that country. Note: you can also use the C<official()> method of a L<Locale::Object::Language> object on a country object; this will return a boolean value describing whether the language is official in that country.
 
 =head2 C<timezone()>
 

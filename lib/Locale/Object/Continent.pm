@@ -157,10 +157,6 @@ __END__
 
 Locale::Object::Continent - continent information objects
 
-=head1 VERSION
-
-0.24
-
 =head1 DESCRIPTION
 
 C<Locale::Object::Continent> allows you to create objects representing continents, that contain other objects representing the continent in question's countries.

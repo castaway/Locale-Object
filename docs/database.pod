@@ -1,6 +1,8 @@
-=head1 Schema documentation for the Locale::Object database
+=head1 NAME
 
-=head3 THE DATABASE
+database.pod - documentation for the Locale::Object database
+
+=head2 THE DATABASE
 
 The database of locale information used by the L<Locale::Object> modules uses L<DBD::SQLite>, and contains several tables.
 
@@ -19,11 +21,11 @@ The database of locale information used by the L<Locale::Object> modules uses L<
 
 =over 4
 
-* C<code_alpha2> , C<code_alpha3>, C<code_numeric> and C<name> are data from ISO 3166 - see L<http://ftp.ics.uci.edu/pub/ietf/http/related/iso3166.txt>.
+=item * C<code_alpha2> , C<code_alpha3>, C<code_numeric> and C<name> are data from ISO 3166 - see L<http://ftp.ics.uci.edu/pub/ietf/http/related/iso3166.txt>.
 
-* C<dialing_code> is an International Direct Dialing code - see L<http://kropla.com/dialcode.htm>.
+=item * C<dialing_code> is an International Direct Dialing code - see L<http://kropla.com/dialcode.htm>.
 
-* C<utc_offset_main> is the time offset of the time zone of the country's capital from UTC, expressed decimally in hours. C<utc_offsets_all> is a comma-separated list of offsets for all time zones that the country falls across, listed from west to east. If there is only one value this will match C<utc_offset_main>.
+=item * C<utc_offset_main> is the time offset of the time zone of the country's capital from UTC, expressed decimally in hours. C<utc_offsets_all> is a comma-separated list of offsets for all time zones that the country falls across, listed from west to east. If there is only one value this will match C<utc_offset_main>.
 
 =back
 
@@ -42,11 +44,11 @@ The database of locale information used by the L<Locale::Object> modules uses L<
 
 =over 4
 
-* C<country_code> contains ISO 3166 two-letter country codes, as in the previous table.
+=item * C<country_code> contains ISO 3166 two-letter country codes, as in the previous table.
 
-* C<name> and C<code> contain ISO 4217 three-letter codes and names for world currencies - see L<http://fx.sauder.ubc.ca/iso4217.html>.
+=item * C<name> and C<code> contain ISO 4217 three-letter codes and names for world currencies - see L<http://fx.sauder.ubc.ca/iso4217.html>.
 
-* C<symbol>, C<subunit> and C<subunit_amount> contain currency symbols, subunits (such as cents) and the amounts of subunits that comprise a single currency unit (such as 100 [cents in a dollar]). This data was sourced from L<http://fx.sauder.ubc.ca/currency_table.html>.
+=item * C<symbol>, C<subunit> and C<subunit_amount> contain currency symbols, subunits (such as cents) and the amounts of subunits that comprise a single currency unit (such as 100 [cents in a dollar]). This data was sourced from L<http://fx.sauder.ubc.ca/currency_table.html>.
 
 =back
 
@@ -60,7 +62,7 @@ The database of locale information used by the L<Locale::Object> modules uses L<
 
 =over 4
 
-* C<country_code> contains ISO 3166 two-letter codes again, and C<name> contains associated continent names (Africa, Asia, Europe, North America, Oceania and South America). Sourced from L<http://www.worldatlas.com/cntycont.htm>.
+=item *C<country_code> contains ISO 3166 two-letter codes again, and C<name> contains associated continent names (Africa, Asia, Europe, North America, Oceania and South America). Sourced from L<http://www.worldatlas.com/cntycont.htm>.
 
 =back
 
@@ -75,11 +77,11 @@ The database of locale information used by the L<Locale::Object> modules uses L<
 
 =over 4
 
-* C<code_alpha2> contains 2-letter ISO 639-1 language codes. See  L<http://www.loc.gov/standards/iso639-2/englangn.html>.
+=item * C<code_alpha2> contains 2-letter ISO 639-1 language codes. See  L<http://www.loc.gov/standards/iso639-2/englangn.html>.
 
-* C<code_alpha3> contains 3-letter ISO 639-2. There two parts of ISO 639-2, B (for 'bibliographic') and T (for 'terminology'), which differ in 23 instances out of the full list of 464 codes. For simplicity, this module uses the ISO 639-2/T versions. For more information, see the URL above and also L<http://www.loc.gov/standards/iso639-2/develop.html>.
+=item * C<code_alpha3> contains 3-letter ISO 639-2. There two parts of ISO 639-2, B (for 'bibliographic') and T (for 'terminology'), which differ in 23 instances out of the full list of 464 codes. For simplicity, this module uses the ISO 639-2/T versions. For more information, see the URL above and also L<http://www.loc.gov/standards/iso639-2/develop.html>.
 
-* C<name> contains the standard names of languages in English as defined by ISO 639.
+=item * C<name> contains the standard names of languages in English as defined by ISO 639.
 
 =back
 
@@ -109,11 +111,11 @@ In addition to the preceding, the following sources were invaluable:
 
 =over 4
 
-* Nationmaster - L<http://www.nationmaster.com/>
+=item * Nationmaster - L<http://www.nationmaster.com/>
 
-* Ethnologue - L<http://www.ethnologue.com/>
+=item * Ethnologue - L<http://www.ethnologue.com/>
 
-* Wikipedia - L<http://en.wikipedia.org/>
+=item * Wikipedia - L<http://en.wikipedia.org/>
 
 =back
 
@@ -135,11 +137,11 @@ An example section of this table:
 
 =over 4
 
-* C<country_code> contains ISO 3166 two-letter country codes.
+=item * C<country_code> contains ISO 3166 two-letter country codes.
 
-* C<timezone> contains time zone names as defined in the Olson database. See L<http://www.twinsun.com/tz/tz-link.htm> for more than you ever wanted to know about this.
+=item * C<timezone> contains time zone names as defined in the Olson database. See L<http://www.twinsun.com/tz/tz-link.htm> for more than you ever wanted to know about this.
 
-* C<is_default> contains a boolean value indicating whether the time zone in question is default in the country. For countries with more than one time zone, a value of 'true' indicates the time zone covers the nation's capital.
+=item * C<is_default> contains a boolean value indicating whether the time zone in question is default in the country. For countries with more than one time zone, a value of 'true' indicates the time zone covers the nation's capital.
 
 =back
 

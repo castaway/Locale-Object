@@ -10,7 +10,7 @@ use Locale::Object::Country;
 use Locale::Object::Currency;
 use Locale::Object::Language;
 
-$VERSION = "0.6";
+$VERSION = "0.7";
 
 sub new
 {
@@ -45,270 +45,243 @@ sub init
   $self;
 }  
 
-sub _check_currency_countries
-{
-  my $self = shift;
-  my $sane;
-  
-  foreach my $place ($self->{_currency}->countries)
-  {
-    # Test will pass if one of the countries using this currency matches our country attribute.
-    $sane = 1 if $place->code_alpha2 eq $self->{_country}->code_alpha2
-  }
-  
-  $sane;
-}
-
-sub _check_language_countries
-{
-  my $self = shift;
-  my $sane;
-  
-  foreach my $place ($self->{_language}->countries)
-  {
-    # Test will pass if one of the countries using this currency matches our country attribute.
-    $sane = 1 if $place->code_alpha2 eq $self->{_country}->code_alpha2;
-  }      
-
-  $sane;
-}
-
-sub _check_currency_languages
-{
-  my $self = shift;
-  my $sane;
-  
-  # For each of the countries that use this currency,
-  foreach my $place ($self->{_currency}->countries)
-  {
-    # For each of the languages that country uses;
-    foreach my $language ($place->languages)
-    {
-      # Pass test if the language matches our language attribute.
-      $sane = 1 if $language->code_alpha2 eq $self->{_language}->code_alpha2;
-    }
-  }
-  
-  $sane;
-}
-
 # Check 'sanity' of object - that is, whether attributes correspond with each other
 # (no mixing of, say, currency from one country with language from another).
-# Probably eminently refactorable.
 
 sub sane
 {
-  my $self      = shift;
-  my $attribute = shift;
-  
-  # Make a hash of valid attributes
-  my %allowed_attribs = map { $_ => undef } qw( country currency language );
+  my $self = shift;
+  my $what = shift;
 
-  my ($country_sane, $currency_sane, $language_sane, $sane);
+  # Default attribute is country.
+  $what = 'country' unless $what;
   
-  croak "ERROR: attribute to check sanity against ($attribute) unrecognized, must be one of 'country', 'currency', 'language'." unless exists $allowed_attribs{$attribute};
- 
-  # Sanity checks against country attribute
-  #########################################
-  
-  if ($attribute eq 'country')
+  # Make a hash of allowed attributes.
+  my %attributes = map { $_ => undef } qw( country currency language );
+
+  croak "ERROR: attribute to check sanity against ($what) unrecognized, must be one of 'country', 'currency', 'language'." unless exists $attributes{$what};
+   
+  # We want to compare our selected attribute against the remaining attributes,
+  # which will be whatever's left after deleting it from our attributes list.
+  delete $attributes{$what};
+
+  my $sanity_level = 0;
+
+  # Compare each of the other attributes.
+  foreach (keys %attributes)
   {
-    # Check currency attribute if it exists.
-    if ($self->{_currency})
-    {    
-      $currency_sane = $self->_check_currency_countries;
-    }
-    else
-    {
-      # If it doesn't it can't be wrong, so that's OK.
-      $currency_sane = 1;
-    }
-
-    # Check language attribute if it exists.
-    if ($self->{_language})
-    {
-      $language_sane = $self->_check_language_countries;
-    }
-    else
-    {
-      # If it doesn't it can't be wrong, so that's OK.
-      $language_sane = 1;
-    }
-    
-    # If both tests pass, the object is sane.
-    $sane = 1 if $currency_sane == 1 && $language_sane == 1;
+    $sanity_level++ if $self->_compare( from => $_, to => $what ) == 1;
   }
+    
+  # It's only sane if both the other attributes matched.
+  return 1 if $sanity_level == 2;
   
-  # Sanity checks against currency attribute
-  ##########################################
+  0;
+}
+
+# Compare object attributes against each other.
+# Horrible, horrible code.
+
+sub _compare
+{
+  my $self   = shift;
+  my %params = @_;
+
+  my $from = '_' . $params{from};
+  my $to   = '_' . $params{to};
   
-  elsif ($attribute eq 'currency')
+  # Pointless but we won't forbid it.
+  return 1 if $params{from} eq $params{to};
+  
+  # An empty attribute is a sane attribute.
+  return 1 unless $self->{$from};
+
+  if ($params{to} eq 'country')
   {    
-    # Check country attribute if it exists.
-    if ($self->{_country})
-    {    
-      $country_sane = $self->_check_currency_countries;
-    }
-    else
+    foreach my $place ($self->{$from}->countries)
     {
-      # If it doesn't it can't be wrong, so that's OK.
-      $country_sane = 1;
+      # If any of the countries we're checking match the code
+      # of $self->{_country}, it's sane.
+      return 1 if $place->code_alpha2 eq $self->{_country}->code_alpha2;
     }
-
-    # Check language attribute if it exists.
-    if ($self->{_language})
-    {
-      $language_sane = $self->_check_currency_languages;
-    }
-    else
-    {
-      # If it doesn't it can't be wrong, so that's OK.
-      $language_sane = 1;
-    }
-    
-    # If both tests pass, the object is sane.
-    $sane = 1 if $country_sane == 1 && $language_sane == 1;
-
   }
   
-  # Sanity checks against language attribute
-  ##########################################
-
-  elsif ($attribute eq 'language')
+  elsif ($params{to} eq 'language')
   {
-    # Check country attribute if it exists.
-    if ($self->{_country})
+    if ($params{from} eq 'country')
     {
-      $language_sane = $self->_check_language_countries;
+      foreach ($self->{_country}->languages)
+      {
+        # If $self->{_language} is one of those, it's sane.
+        return 1 if $_->code_alpha2 eq $self->{_language}->code_alpha2;
+      } 
     }
-    else
+    
+    elsif ($params{from} eq 'currency')
     {
-      # If it doesn't it can't be wrong, so that's OK.
-      $language_sane = 1;
+      my %languages;
+      
+      # Check the alpha2 codes of all the languages used
+      # in all the countries that use that currency.
+      foreach ($self->{_currency}->countries)
+      {
+        foreach ($_->languages)
+        {
+          # If $self->{_language}'s alpha2 code is one of those, it's sane.
+          return 1 if $_->code_alpha2 eq $self->{_language}->code_alpha2;
+        }
+      }
     }
-
-    # Check currency attribute if it exists.
-    if ($self->{_currency})
-    {    
-      $currency_sane = $self->_check_currency_languages;
-    }
-    else
-    {
-      # If it doesn't it can't be wrong, so that's OK.
-      $currency_sane = 1;
-    }
-
-    # If both tests pass, the object is sane.
-    $sane = 1 if $country_sane == 1 && $currency_sane == 1;
-
   }
-
-  return 0 unless $sane == 1;
+  
+  elsif ($params{to} eq 'currency')
+  {
+    if ($params{from} eq 'country')
+    {
+      foreach ($self->{_currency}->countries)
+      {
+        # If any of the countries we're checking match the code
+        # of $self->{_country}, it's sane.
+        return 1 if $_->code_alpha2 eq $self->{_country}->code_alpha2;
+      }
+    }
+    
+    elsif ($params{from} eq 'language')
+    {
+      # Check the codes of all the currencies used
+      # in all the countries that use that language.
+      foreach ($self->{_language}->countries)
+      {
+        foreach ($_->currency)
+        {
+          # If $self->{_currency}'s code is one of those, it's sane.
+          return 1 if $_->code eq $self->{_currency}->code;
+        }
+      }
+    }
+  }
+  
+  0;
 }
 
 # Make all the attributes kinsmen.
-#
-# UNFINISHED CODE: use at your own risk!
-#
-# There's a bit of ArrowAntiPattern here. Refactoring needed.
 
 sub make_sane
 {
   my $self   = shift;
   my %params = @_;
 
-  # Internal attributes start with underscores.
-  my $internal_attribute = '_' . $params{attribute} if $params{attribute};
+  my $what     = $params{attribute};
+  my $populate = $params{populate};
 
-  if ($params{attribute})
-  {
-    $self->_make_sane_by_attribute($params{attribute});
-  }
-  else
-  {
-    # ...
-  }
+  # Make a hash of allowed attributes.
+  my %attributes = map { $_ => undef } qw( country currency language );
+
+  # Default attribute is country.
+  $what = 'country' unless $what;
   
-  if ($params{populate} == 1)
+  croak qq{ERROR: attribute to make sane with ("$what") unrecognized; must be one of "country", "currency", "language".} unless exists $attributes{$what};
+  
+  # Internal attributes start with underscores.
+  my $internal_attribute = '_' . $what;
+        
+  croak "ERROR: can not make sane against $what, none has been set." unless $self->{$internal_attribute};
+      
+  delete $attributes{$what};
+
+  if ($what eq 'country')
   {
-    croak 'ERROR: cannot populate without an attribute to seed from.' unless $params{attribute};
+    # Set the currency attribute with the currency used by the country attribute.
+    $self->currency_code($self->{_country}->currency->code) if $self->{_currency} or $populate == 1;
 
-    croak 'ERROR: cannot populate against ', $params{attribute}, ' none has not been set.' unless $self->{$internal_attribute};
-
-    if ($params{attribute} eq 'country')
+    # Find the first language belonging to the country attribute that's
+    # listed as official, and set it as the language attribute.
+    if ($self->{_language} or $populate == 1)
     {
-      $self->_populate_currency;
+      $self->language_code_alpha2(
+                                  @{$self->{_country}->languages_official}[0]->code_alpha2
+                                 );
     }
   }
+  elsif ($what eq 'language')
+  {
+    my $country;
+
+    # If the country attribute exists, check if it uses the language. If so, pick it.
+    if ($self->{_country})
+    {
+      foreach ($self->{_language}->countries)
+      {
+        $country = $_ if $self->{_country}->code_alpha2 eq $_->code_alpha2;
+      }
+    }
+    
+    unless (defined $country) 
+    {
+      # If no country attribute exists, pick the first country that uses
+      # the language officially.
+      foreach ($self->{_language}->countries)
+      {
+        if ($self->{_language}->official($_) eq 'true')
+        {
+          $country = $_;
+          last;
+        }
+      }
+    }     
+    
+    $self->country_code_alpha2($country->code_alpha2) if $self->{_country}  or $populate == 1;
+    $self->currency_code($country->currency->code)    if $self->{_currency} or $populate == 1;
+  }
+  elsif ($what eq 'currency')
+  {
+    my ($country, $language);
+
+    # Try and cross-reference against language.
+    if ($self->{_language})
+    {
+      foreach ($self->{_language}->countries)
+      {
+        # If the currency of a country using our language
+        # matches our currency attribute, pick that country.
+        $country = $_ if ($_->currency->code eq $self->{_currency}->code)
+      }
+    }
+
+    # If the preceding didn't find a country, get the first one to use the currency.    
+    $country = @{$self->{_currency}->countries}[0] unless defined $country;
+
+    # Get the first official language of that country.
+    $language = @{$country->languages_official}[0];
+
+    $self->country_code_alpha2($country->code_alpha2)   if $self->{_country}  or $populate == 1;
+    $self->language_code_alpha2($language->code_alpha2) if $self->{_language} or $populate == 1;
+  }
+      
+  $self;
 }
 
-# See warning above about unfinished code.
-sub _make_sane_by_attribute
+# Remove attributes.
+sub empty
 {
-  my $self = shift;
+  my $self      = shift;
   my $attribute = shift;
 
-  # Make a hash of valid attributes.
-  my %allowed_attribs = map { $_ => undef } qw( country currency language );
-
-  croak "ERROR: attribute to make sane with ($attribute) unrecognized, must be one of 'country', 'currency', 'language'." unless exists $allowed_attribs{$attribute};
-
-  # Internal attributes start with underscores.
-  my $internal_attribute = '_' . $attribute;
-      
-  croak 'ERROR: can not make sane against ', $attribute, ' none has been set.' unless $self->{$internal_attribute};
+  $attribute = '_' . $attribute;
   
-  # Make sane by country.
-  if ($attribute eq 'country')
-  {
-    # Reset our currency if there is one.
-    $self->_populate_currency if $self->{_currency};
-  
-    # Reset our language if there is one.
-    $self->_populate_language if $self->{_language};
-  }
-     
-  # Make sane by currency.
-  elsif ($attribute eq 'currency')
-  {
-    # TBD
-  }
-    
-  # Make sane by language.
-  elsif ($attribute eq 'language')
-  {
-    # TBD
-  }
+  # Make a hash of allowed attributes.
+  my %valid = map { $_ => undef } qw( _country _currency _language );
 
-  $self;
-}
+  croak "ERROR: No attribute specified to empty." unless $attribute;
+  croak qq{ERROR: Invalid attribute ("$attribute") specified to be emptied.} unless exists $valid{$attribute};
 
-sub _populate_currency
-{
-  my $self = shift;
-
-  $self->{_currency} = $self->{_country}->currency;
+  delete $self->{$attribute};
   
   $self;
-}
-
-sub _populate_language
-{
-  my $self = shift;
-  
-  my @languages = $self->{_country}->languages;
-        
-  # Get the official language of the country in the country attribute, and set
-  # the language attribute to that.
-  foreach my $spoken (@languages)
-  {
-    $self->language_code_alpha3($spoken->code_alpha3) if $spoken->official($self->{_country}) eq 'true';
-  }
-
 }
 
 # Small methods that set or get object attributes.
-# Will refactor these into an AUTOLOAD later.
+# Could do with being refactored into an AUTOLOAD.
 
 sub country_code_alpha2
 {
@@ -420,10 +393,6 @@ __END__
 
 Locale::Object - OO locale information
 
-=head1 VERSION
-
-0.6
-
 =head1 DESCRIPTION
 
 The C<Locale::Object> group of modules attempts to provide locale-related information in an object-oriented fashion. The information is collated from several sources and provided in an accompanying L<DBD::SQLite> database.
@@ -432,19 +401,19 @@ At present, the modules are:
 
 =over 4
 
-* L<Locale::Object> - make compound objects containing country, currency and language objects
+=item * L<Locale::Object> - make compound objects containing country, currency and language objects
 
-* L<Locale::Object::Country> - objects representing countries
+=item * L<Locale::Object::Country> - objects representing countries
 
-* L<Locale::Object::Continent> - objects representing continents
+=item * L<Locale::Object::Continent> - objects representing continents
 
-* L<Locale::Object::Currency> - objects representing currencies
+=item * L<Locale::Object::Currency> - objects representing currencies
 
-* L<Locale::Object::Currency::Converter>  - convert between currencies
+=item * L<Locale::Object::Currency::Converter>  - convert between currencies
 
-* L<Locale::Object::DB> - does lookups for the modules in the database
+=item * L<Locale::Object::DB> - does lookups for the modules in the database
 
-* L<Locale::Object::Language> - objects representing languages
+=item * L<Locale::Object::Language> - objects representing languages
 
 =back
 
@@ -469,6 +438,19 @@ For more information, see the documentation for those modules. The database is d
     $obj->language_code_alpha2('ps');
     $obj->language_code_alpha3('pus');
     $obj->language_name('Pushto');
+    
+    my $country  = $obj->country;
+    my $currency = $obj->currency;
+    my $language = $obj->language;
+    
+    $obj->empty('language');
+    
+    print $obj->sane('country');
+
+    $obj->make_sane(
+                    attribute => 'country'
+                    populate  => 1
+                   );
     
 =head1 METHODS
 
@@ -504,7 +486,7 @@ Serves the same purpose as the previous methods, only for the currency attribute
 
 Serves the same purpose as the previous methods, only for the language attribute, a L<Locale::Object::Language> object.
 
-=head1 Retrieving Attributes
+=head1 Retrieving and Removing Attributes
 
 =head2 C<country(), language(), currency()>
 
@@ -515,6 +497,49 @@ While the foregoing methods can be used to set attribute objects, to retrieve th
     my $currency_code = $obj->currency->code;
     
 See L<Locale::Object::Country>, L<Locale::Object::Language> and L<Locale::Object::Currency> for more details on the subordinate methods.
+
+=head2 C<empty()>
+
+    $obj->empty('language');
+
+Remove an attribute from the object. Can be one of C<country>, C<currency>, C<language>.
+
+=head1 Object Sanity
+
+=head2 C<sane()>
+
+There will be occasions you want to know whether all the attributes in your object make sense with each other - questions such as "is the currency of the object used in the country?" or "Do they speak the language of the object in that country?" For that, use C<sane()>.
+
+    print $obj->sane('country');
+    
+Returns 1 if the two remaining attributes in the object make sense compared against the attribute name you specify (if not specified, country is the default); otherwise, 0. The following table explains what's needed for a result of 1. Note: if an attribute doesn't exist, it's not *not* sane, so checking sanity against an attribute in an object with no other attributes will give a result of 1.
+
+  If sane against | country must | language must  | currency must
+  ------------------------------------------------------------------
+  country  (co.)  | n/a          | be used in co. | be used in co.
+  ------------------------------------------------------------------
+  language (la.)  | be using la. | n/a            | be used in a co. 
+                  |              |                | speaking la.
+  ------------------------------------------------------------------
+  currency (cu.)  | use cu.      | be spoken in a | n/a
+                  |              | co. using cu.  |
+                  
+=head2 C<make_sane()>
+
+    $obj->make_sane(
+                    attribute => 'country'
+                    populate  => 1
+                   );
+    
+This method will do its best to make the attributes of the object correspond with each other. The attribute you specify as a parameter will be taken to align against (default is country if none specified). If you specify C<populate> as 1, any empty attributes in the object will be filled. Provisos:
+
+=over 4 
+
+=item 1) Languages can be used in multiple countries. If you C<make_sane> against language, to pick a country the module will choose the first country it finds that uses the language officially.
+
+=item 2) A similar situation exists for currencies. If a language attribute already exists, the module will pick the first country it finds that speaks the language and uses the currency. Otherwise, it will select the first country in its list of countries using the currency.
+
+=back
 
 =head1 AUTHOR
 
