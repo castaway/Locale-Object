@@ -1,3 +1,14 @@
+2003-12-22: 0.53
+            * Removed a chunk of old code that had got back into DB.pm 
+              somehow and was causing warnings.
+            * Modified Converter.pm to try and deal with errors a little 
+              better.
+            * Changed tests in 06converter.t to only indicate if conversions 
+              don't succeed, rather than fail and break installation - if 
+              they don't succeed, it may be a network problem rather than one
+              with the module. (Thanks to Jost Krieger and Barbie for test 
+              results prompting this change.)
+
 2003-12-18: 0.52
             * Made Continent.pm, Country.pm, Currency.pm and Language.pm 
               subclasses of Object.pm so they could share one new() method for

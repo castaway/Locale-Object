@@ -8,7 +8,7 @@ use vars qw($VERSION);
 use DBI;
 use File::Spec;
 
-$VERSION = "0.3";
+$VERSION = "0.31";
 
 # The database should be in the same directory as this file. Get the location.
 my (undef, $path) = File::Spec->splitpath(__FILE__);
@@ -32,25 +32,6 @@ my $dbh = DBI->connect("dbi:SQLite:dbname=$db", "", "",
   PrintError => 1, RaiseError => 1, AutoCommit => 1
 } ) or croak DBI::errstr;
 
-
-# Database lookup routine.
-sub lookup
-{  
-  my ($self, $table, $what, $value) = @_;
-
-  # Sanity check for table parameter.
-  _check_search_params($table);
-  
-  # Return an array of the stuff returned from an SQL query for rows with the $what 
-  # column matching $value.
-  
-  my @results = $dbh->selectrow_array("SELECT * FROM $table WHERE $what=?", {}, $value);
-
-  # Return error if no match.
-  return "No result when looking in '$table' for a '$what' of '$value'." unless @results;
-  
-  return @results;
-}
 
 # Method to return all values of 'result_column' in 'table' in rows that 
 # have 'value' in 'search_column'.
@@ -155,7 +136,7 @@ Locale::Object::DB - do database lookups for Locale::Object modules
 
 =head1 VERSION
 
-0.3 - this refers also to the accompanying database file, and will be incremented if that is updated.
+0.31 - this refers also to the accompanying database file, and will be incremented if that is updated.
 
 =head1 DESCRIPTION
 

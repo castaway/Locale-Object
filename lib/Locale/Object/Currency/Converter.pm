@@ -7,7 +7,7 @@ use vars qw($VERSION);
 
 use Scalar::Util qw(looks_like_number);
 
-$VERSION = "0.1";
+$VERSION = "0.11";
 
 sub new
 {
@@ -136,8 +136,14 @@ sub _yahoo
   # We're not in a talkative mood.
   $Finance::Currency::Convert::Yahoo::CHAT = undef;
 
-  my $result = Finance::Currency::Convert::Yahoo::convert($value,$self->{from}->code,$self->{to}->code);
-
+  my $result;
+  
+  eval {
+    $result = Finance::Currency::Convert::Yahoo::convert($value,$self->{from}->code,$self->{to}->code);
+  };
+  
+  croak "ERROR: $!" if $! ne '';
+  
   $result;
 }
 
@@ -151,11 +157,19 @@ sub _xe
 
   my $xe = Finance::Currency::Convert::XE->new() or croak "Error: Couldn't create Finance::Currency::Convert::XE object: $!";
 
-  return $xe->convert(
-                      'source' => $self->{from}->code,
-                      'target' => $self->{to}->code,
-                      'value'  => $value
-                     ) || croak $xe->error;
+  my $result;
+
+  eval {
+    $result = $xe->convert(
+                           'source' => $self->{from}->code,
+                           'target' => $self->{to}->code,
+                           'value'  => $value
+                          );
+  };
+  
+  croak "ERROR: $! / " . $xe->error if $! ne '';
+
+  $result;
 }
 
 # Give the exchange rate of the currencies.
@@ -207,7 +221,7 @@ Locale::Object::Currency::Converter - convert between currencies
 
 =head1 VERSION
 
-0.1
+0.11
 
 =head1 DESCRIPTION
 
