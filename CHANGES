@@ -1,6 +1,13 @@
+2003-11-25: 0.2
+            * Cleaned up the API a little - the countries() method in 
+              Continent.pm and Currency.pm now gives an array back, instead 
+              of a hash.
+
 2003-11-25: 0.11
-            Fixed a bit of semi-finished and outdated documentation in DB.pm that had crept past me.
-            Added a little bit more documentation to copy-for-test.PL for clarity.
+            * Fixed a bit of semi-finished and outdated documentation in DB.pm 
+              that had crept past me.
+            * Added a little bit more documentation to copy-for-test.PL for
+              clarity.
 
 2003-11-24: 0.1
-            Initial release.
+            * Initial release.

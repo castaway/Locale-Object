@@ -27,10 +27,18 @@ is( $afghanistan->currency->name, 'afghani', 'it had the correct currency');
 #6
 is( $afghanistan->continent->name, 'Asia',   'its was on the correct continent');
 
-my $countries = \%{$afghanistan->continent->countries};
+my %countries;
+
+# Fill up a hash with the alpha2 codes of countries in the same continent
+foreach my $where ($afghanistan->continent->countries)
+{
+  # Get the alpha2 code of the country we're looking at.
+  my $where_code = $where->code_alpha2;
+  $countries{$where_code} = undef;
+}
 
 #7
-is( $countries->{'tj'}->name, 'Tajikistan', 'it has a correct neighbor on its continent');
+ok( exists $countries{'tj'}, 'it has a correct neighbor on its continent');
 
 my $copy = Locale::Object::Country->new( code_alpha2 => 'af' );
 

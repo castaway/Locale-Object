@@ -4,7 +4,7 @@ use strict;
 use warnings::register;
 use vars qw($VERSION);
 
-$VERSION = "0.11";
+$VERSION = "0.2";
 
 # Nobody home.
 
@@ -23,7 +23,7 @@ Locale::Object - OO locale information
 
 =head1 VERSION
 
-0.11
+0.2
 
 =head1 DESCRIPTION
 

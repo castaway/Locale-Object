@@ -80,7 +80,7 @@ The database of locale information used by the Locale::Object modules uses L<DBD
         name         char(13),
         PRIMARY KEY  (country_code)
     );
-
+#
 * C<country_code> contains ISO 3166 two-letter codes again, and C<name> contains associated continent names (Africa, Asia, Europe, North America, Oceania and South America). Sourced from L<http://www.worldatlas.com/cntycont.htm>.
 
 =head2 the 'language' table

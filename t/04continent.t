@@ -21,19 +21,21 @@ my $cont_name = $asia->name;
 #3
 is( $cont_name, 'Asia', 'it had the correct name');
 
-my %countries = %{$asia->countries};
-
-my $count = scalar keys %countries; 
-
 #4
-is( $count, 46, 'it had the correct number of countries in it');
+is( scalar @{$asia->countries}, 46, 'it had the correct number of countries in it');
 
-my $country_code = 'af';
+my %countries;
 
-my $country_name = $countries{$country_code}->name;
+# Fill up a hash with the alpha2 codes of countries in $asia.
+foreach my $where ($asia->countries)
+{
+  # Get the alpha2 code of the country we're looking at.
+  my $where_code = $where->code_alpha2;
+  $countries{$where_code} = undef;
+}
 
 #5
-is( $country_name, 'Afghanistan', 'a country in it had the right name');
+ok( exists $countries{'af'}, 'a country in it had the right name');
 
 my $copy = Locale::Object::Continent->new( name => 'Asia' );
 

@@ -8,7 +8,7 @@ use vars qw($VERSION);
 use Locale::Object::Country;
 use Locale::Object::DB;
 
-$VERSION = "0.11";
+$VERSION = "0.2";
 
 my $db = Locale::Object::DB->new();
 
@@ -126,11 +126,13 @@ sub countries
     
     # Check for countries attribute. Set it if we don't have it.
     _set_countries($self) if $self->{_name};
-    
+
+    # Give an array if requested in array context, otherwise a reference.    
+    return @{$self->{_countries}} if wantarray;
     return $self->{_countries};
 }
 
-# Private method to set an attribute with a hash of objects for all countries in this continent.
+# Private method to set an attribute with an array of objects for all countries in this continent.
 sub _set_countries
 {
     my $self = shift;
@@ -138,7 +140,7 @@ sub _set_countries
     # Do nothing if the list already exists.
     return if $self->{_countries};
 
-    my (%country_codes, %countries);
+    my (%country_codes, @countries);
     
     # If it doesn't, find all countries in this continent and put them in a hash.
     foreach my $result ( $db->lookup_all(
@@ -147,18 +149,18 @@ sub _set_countries
                                         search_column => "name", 
                                         value => $self->{'_name'} ) )
     {
-      $country_codes{$result} = 1;
+      $country_codes{$result} = undef;
     }
-    
-    # Create new country objects and put them into a hash.
+
+    # Create new country objects and put them into an array.
     foreach my $where (keys %country_codes)
     {
       my $obj = Locale::Object::Country->new( code_alpha2 => $where );
-      $countries{$where} = $obj;
+      push @countries, $obj; 
     }
     
-    # Set a reference to that hash as an attribute.
-    $self->{'_countries'} = \%countries;
+    # Set a reference to that array as an attribute.
+    $self->{'_countries'} = \@countries;
 }
 
 1;
@@ -171,7 +173,7 @@ Locale::Object::Continent - continent information objects
 
 =head1 VERSION
 
-0.11
+0.2
 
 =head1 DESCRIPTION
 
@@ -179,11 +181,10 @@ C<Locale::Object::Continent> allows you to create objects representing continent
 
 =head1 SYNOPSIS
 
-    my $asia                     = Locale::Object::Continent->new( name => 'Asia' );
+    my $asia      = Locale::Object::Continent->new( name => 'Asia' );
 
-    my $name                     = $asia->name;
-    my %countries                = %{$asia->countries};
-    my $currency_of_afghanistan  = $countries{'af'}->currency->name;
+    my $name      = $asia->name;
+    my @countries = $asia->countries;
 
 =head1 METHODS
 
@@ -203,12 +204,21 @@ Retrieves the value of the continent object's name.
 
 =head2 C<countries>
 
-Returns a hash of L<Locale::Object::Country> objects with their ISO 3166 alpha2 codes as keys (see L<Locale::Object::DB::Schemata> for more details on those). These have their own attribute methods, so you can do things like this:
+    my @countries = $asia->countries;
 
-    my %countries                = %{$asia->countries};
-    my $currency_of_afghanistan  = $countries{'af'}->currency->name;
+Returns an array of L<Locale::Object::Country> objects with their ISO 3166 alpha2 codes as keys (see L<Locale::Object::DB::Schemata> for more details on those) in array context, or a reference in scalar context. The objects have their own attribute methods, so you can do things like this:
 
-See the documentation for L<Locale::Object::Country> for a listing of country attributes.
+    foreach my $place (@countries)
+    {
+      print $place->name, "\n";
+    }
+    
+Which will list you all the currencies used in that continent. See the documentation for L<Locale::Object::Country> for a listing of country attributes. Note that you can chain methods as well.
+
+    foreach my $place (@countries)
+    {
+      print $place->currency->name, "\n";
+    }
 
 =head1 AUTHOR
 

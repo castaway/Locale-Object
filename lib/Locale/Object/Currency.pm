@@ -8,7 +8,7 @@ use vars qw($VERSION);
 use Locale::Object::Country;
 use Locale::Object::DB;
 
-$VERSION = "0.11";
+$VERSION = "0.2";
 
 my $db = Locale::Object::DB->new();
 
@@ -214,7 +214,7 @@ Locale::Object::Currency - currency information objects
 
 =head1 VERSION
 
-0.11
+0.2
 
 =head1 DESCRIPTION
 
@@ -233,7 +233,7 @@ C<Locale::Object::Country> allows you to create objects containing information a
     my $subunit        = $usd->subunit;
     my $subunit_amount = $usd->subunit_amount;
     
-    my %countries = %{$usd->countries};
+    my @countries      = $usd->countries;
 
 =head1 METHODS
 
@@ -253,26 +253,21 @@ These methods retrieve the values of the attributes in the object whose name the
 
 =head2 C<countries>
 
-    my %countries = %{$usd->countries};
+    my @countries = $usd->countries;
 
-Returns a hash of L<Locale::Object::Country> objects with their ISO 3166 alpha2 codes as keys (see L<Locale::Object::DB::Schemata> for more details on those) for all countries using this currency. These have their own attribute methods, so you can do things like this for example:
+Returns an array of L<Locale::Object::Country> objects with their ISO 3166 alpha2 codes as keys (see L<Locale::Object::DB::Schemata> for more details on those) for all countries using this currency in array context, or a reference in scalar context. The objects have their own attribute methods, so you can do things like this for example:
 
-    foreach my $country (sort keys %countries)
+    foreach my $place (@countries)
     {
-      print "- ", $countries{$country}->name, "\n";
+      print $place->name, "\n";
     }
     
-    # prints:
-    # - American Samoa
-    # - Guam
-    # - Palau
-    # - Puerto Rico 
-    # - Turks and Caicos Islands
-    # - United States 
-    # - Virgin Islands, British
-    # - Virgin Islands, U.S.
-    
-See the documentation for L<Locale::Object::Country> for a listing of country attributes.
+Which will list you all the countries that use in that currency. See the documentation for L<Locale::Object::Country> for a listing of country attributes. Note that you can chain methods as well.
+
+    foreach my $place (@countries)
+    {
+      print $place->continent->name, "\n";
+    }
 
 =head1 KNOWN BUGS
 

@@ -203,13 +203,12 @@ C<Locale::Object::Country> allows you to create objects containing information a
     
     my $country = Locale::Object::Country->new( code_alpha2 => 'af' );
     
-    my $name = $obj->name;                      # 'Afghanistan'
-    
-    my $code_alpha3   = $country->code_alpha3;  # 'afg'
+    my $name        = $country->name;         # 'Afghanistan'
+    my $code_alpha3 = $country->code_alpha3;  # 'afg'
     
     my $currency      = $country->currency;
-    my $currency_name = $currency->name;        # 'afghani'
-    
+    my $continent     = $country->continent;
+
 =head1 METHODS
 
 =head2 C<new()>
