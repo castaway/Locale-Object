@@ -11,7 +11,7 @@ use base qw( Locale::Object );
 use Locale::Object::Country;
 use Locale::Object::DB;
 
-$VERSION = "0.131";
+$VERSION = "0.132";
 
 my $db = Locale::Object::DB->new();
 
@@ -323,11 +323,15 @@ Which will list you all the countries that use in that currency. See the documen
 
     print $eng->official($gb);  # prints 'true'
 
-Give this method a L<Locale::Object::Country> object, and it will return a 'true' or 'false' value for whether the country the object represents has the language represented by your C<Locale::Object::Language> object as an official language. See L<Locale::Object::DB::Schemata> for a note about languages in the database.
+Give this method a L<Locale::Object::Country> object, and it will return a 'true' or 'false' value for whether the country the object represents has the language represented by your C<Locale::Object::Language> object as an official language. See L<database.pod> for a note about languages in the database.
+
+=head1 OBSOLETE LANGUAGE CODES
+
+ISO 639 is not immune from change, and there are three codes that changed in 1995: Hebrew (C<he>, was C<iw>), Indonesian (C<id>, was C<in>) and Yiddish (C<yi>, formerly C<ji>). Because the database maintains a one-to-one mapping, the old codes aren't included; if you need to support them for some reason (apparently Java versions previous to 1.4 use 'iw', for example), you'll have to alias them yourself. Thanks to Robin Szemeti (RSZEMETI) for bringing this to my attention.
 
 =head1 KNOWN BUGS
 
-The database of language information is not perfect by a long stretch. In particular, numerous comparatively obscure secondary or regional languages that don't have ISO codes, such as in several African countries and India, are missing. (See note in L<Locale::Object::DB::Schemata> about data sources.) Please send any corrections to the author.
+The database of language information is not perfect by a long stretch. In particular, numerous comparatively obscure secondary or regional languages that don't have ISO codes, such as in several African countries and India, are missing. (See note in L<database.pod> about data sources.) Please send any corrections to the author.
 
 =head1 AUTHOR
 

@@ -84,14 +84,14 @@ $obj->make_sane(
                 populate  => 1
                );
 
-#15
+#14
 is( $obj->sane('country'), 1, 'Object was made sane without attribute parameter' );
 
 $obj->make_sane(
                 attribute => 'country',
                );
                
-#14
+#15
 is( $obj->sane('country'), 1, 'Object was made sane by country' );
 
 $obj->language_name('Danish');

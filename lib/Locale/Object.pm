@@ -10,7 +10,7 @@ use Locale::Object::Country;
 use Locale::Object::Currency;
 use Locale::Object::Language;
 
-$VERSION = "0.71";
+$VERSION = "0.72";
 
 sub new
 {
@@ -172,7 +172,7 @@ sub make_sane
   my %params = @_;
 
   my $what     = $params{attribute};
-  my $populate = $params{populate};
+  my $populate = $params{populate} || 0;
 
   # Make a hash of allowed attributes.
   my %attributes = map { $_ => undef } qw( country currency language );
@@ -553,7 +553,7 @@ Earle Martin <EMARTIN@cpan.org>
 
 =head1 CREDITS
 
-Original concept: Pierre Denis (PDENIS). I had much useful assistance from Pierre, Tom Insam (TOMI) - who contributed to my knowledge of DBI - and James Duncan (JDUNCAN). Most of the OO concepts involved I learnt from Damian Conway (DCONWAY)'s excellent book "Object Oriented Perl" (ISBN 1-884777-79-1). Ask Bjørn Hansen (ABH) provided a patch for a bug in v0.7.
+Original concept: Pierre Denis (PDENIS). I had much useful assistance from Pierre, Tom Insam (TOMI) - who contributed to my knowledge of DBI - and James Duncan (JDUNCAN). Most of the OO concepts involved I learnt from Damian Conway (DCONWAY)'s excellent book "Object Oriented Perl" (ISBN 1-884777-79-1). Ask Bjoern Hansen (ABH) provided a patch for a bug in v0.7.
 
 =head1 COPYRIGHT
 

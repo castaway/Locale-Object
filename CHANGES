@@ -1,5 +1,10 @@
+2004-04-24: 0.72
+            * Added a note to Language.pm about obsolete ISO 639 codes on a tip from 
+              Robin Szemeti.
+            * Got rid of a warning the appearing when Object.pm tests were run.
+              
 2004-03-31: 0.71
-            * Ask Bjørn Hansen provided a patch for a bug in using Antarctica as a
+            * Ask Bjoern Hansen provided a patch for a bug in using Antarctica as a
               country and spotted that Congo was missing a continent listing in the
               database. Thanks!
             
