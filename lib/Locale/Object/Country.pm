@@ -5,28 +5,21 @@ use warnings::register;
 use Carp qw(croak);
 use vars qw($VERSION);
 
+use Locale::Object;
+use base qw( Locale::Object );
+
 use Locale::Object::DB;
 use Locale::Object::Currency;
 use Locale::Object::Continent;
 use Locale::Object::Language;
 
-$VERSION = "0.31";
+$VERSION = "0.32";
 
 my $db = Locale::Object::DB->new();
 
 # Initialize the hash where we'll keep our continent objects.
 my $existing = {};
 
-sub new
-{
-  my $class = shift;
-  my %params = @_;
-
-  my $self = bless {}, $class;
-  
-  # Initialize the new object or return an existing one.
-  $self->init(%params);
-}
 
 # Initialize the object.
 sub init
@@ -116,7 +109,7 @@ sub _make_country
   my $code = $attributes[0];
 
   # The attributes we want to set.
-  my @attr_names = qw(_code_alpha2 _code_alpha3 _code_numeric _name _dialing_code _utc_offset_main _utc_offsets_all);
+  my @attr_names = qw(code_alpha2 code_alpha3 code_numeric name dialing_code utc_offset_main utc_offsets_all);
   
   # Initialize a loop counter.
   my $counter = 0;
@@ -125,7 +118,7 @@ sub _make_country
   foreach my $current_attribute (@attr_names)
   {      
     # set it on the object.
-    $self->{$current_attribute} = $attributes[$counter];
+    $self->$current_attribute( $attributes[$counter] );
     $counter++; 
   }
 
@@ -202,55 +195,118 @@ sub _set_languages
 
 sub code_alpha2
 {
-  my $self = shift;  
+  my $self = shift;
+
+  if (@_)
+  {
+    $self->{_code_alpha2} = shift;
+    return $self;
+  }
+  
   $self->{_code_alpha2};
 }
 
 sub code_alpha3
 {
   my $self = shift;  
+  
+  if (@_)
+  {
+    $self->{_code_alpha3} = shift;
+    return $self;
+  }
+
   $self->{_code_alpha3};
 }
 
 sub code_numeric
 {
   my $self = shift;  
+  
+  if (@_)
+  {
+    $self->{_code_numeric} = shift;
+    return $self;
+  }
+
   $self->{_code_numeric};
 }  
 
 sub continent
 {
   my $self = shift;  
+
+  if (@_)
+  {
+    $self->{_continent} = shift;
+    return $self;
+  }
+
   $self->{_continent};
 }
 
 sub currency
 {
   my $self = shift;  
+  
+  if (@_)
+  {
+    $self->{_currency} = shift;
+    return $self;
+  }
+
   $self->{_currency};
 }
 
 sub dialing_code
 {
   my $self = shift;  
+  
+  if (@_)
+  {
+    $self->{_dialing_code} = shift;
+    return $self;
+  }
+
   $self->{_dialing_code};
 }  
 
 sub name
 {
   my $self = shift;  
+  
+  if (@_)
+  {
+    $self->{_name} = shift;
+    return $self;
+  }
+
   $self->{_name};
 }  
 
 sub utc_offset_main
 {
   my $self = shift;  
+  
+  if (@_)
+  {
+    $self->{_utc_offset_main} = shift;
+    return $self;
+  }
+
   $self->{_utc_offset_main};
 }  
 
 sub utc_offsets_all
 {
   my $self = shift;  
+  
+  if (@_)
+  {
+    $self->{_utc_offsets_all} = shift;
+    return $self;
+  }
+
   $self->{_utc_offsets_all};
 }  
 
@@ -264,7 +320,7 @@ Locale::Object::Country - country information objects
 
 =head1 VERSION
 
-0.31
+0.32
 
 =head1 DESCRIPTION
 

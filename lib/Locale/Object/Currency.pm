@@ -5,10 +5,13 @@ use warnings::register;
 use Carp qw(croak);
 use vars qw($VERSION);
 
+use Locale::Object;
+use base qw( Locale::Object );
+
 use Locale::Object::Country;
 use Locale::Object::DB;
 
-$VERSION = "0.21";
+$VERSION = "0.22";
 
 my $db = Locale::Object::DB->new();
 
@@ -16,17 +19,6 @@ my $db = Locale::Object::DB->new();
 my $existing = {};
 
 my $class;
-
-sub new
-{
-  my $class = shift;
-  my %params = @_;
-
-  my $self = bless {}, $class;
-  
-  # Initialize the new object or return an existing one.
-  $self->init(%params);
-}
 
 # Initialize the object.
 sub init
@@ -114,7 +106,7 @@ sub _make_currency
   my $currency_code = $attributes[0];
   
   # The attributes we want to set.
-  my @attr_names = qw(_name _code _code_numeric _symbol _subunit _subunit_amount);
+  my @attr_names = qw(name code code_numeric symbol subunit subunit_amount);
   
   # Initialize a loop counter.
   my $counter = 0;
@@ -122,9 +114,8 @@ sub _make_currency
   foreach my $current_attribute (@attr_names)
   {
     # Set the attributes of the entry for this currency code in the singleton hash.
-    
-    $self->{$current_attribute} = $attributes[$counter];
-    
+    $self->$current_attribute( $attributes[$counter] );
+   
     $counter++; 
   }
 
@@ -176,42 +167,83 @@ sub _set_countries
     $self->{'_countries'} = \@countries;       
 }
 
-# Small methods that return object attributes.
-# Will refactor these into an AUTOLOAD later.
+# Get/set attributes.
 
 sub code
 {
   my $self = shift;  
+
+  if (@_)
+  {
+    $self->{_code} = shift;
+    return $self;
+  }
+
   $self->{_code};
 }
 
 sub name
 {
-  my $self = shift;  
+  my $self = shift;
+
+  if (@_)
+  {
+    $self->{_name} = shift;
+    return $self;
+  }
+  
   $self->{_name};
 }
 
 sub code_numeric
 {
-  my $self = shift;  
+  my $self = shift;
+
+  if (@_)
+  {
+    $self->{_code_numeric} = shift;
+    return $self;
+  }
+
   $self->{_code_numeric};
 }  
 
 sub symbol
 {
-  my $self = shift;  
+  my $self = shift;
+
+  if (@_)
+  {
+    $self->{_symbol} = shift;
+    return $self;
+  }
+  
   $self->{_symbol};
 }
 
 sub subunit
 {
   my $self = shift;  
+
+  if (@_)
+  {
+    $self->{_subunit} = shift;
+    return $self;
+  }
+
   $self->{_subunit};
 }
 
 sub subunit_amount
 {
   my $self = shift;  
+
+  if (@_)
+  {
+    $self->{_subunit_amount} = shift;
+    return $self;
+  }
+
   $self->{_subunit_amount};
 }
 
@@ -225,7 +257,7 @@ Locale::Object::Currency - currency information objects
 
 =head1 VERSION
 
-0.21
+0.22
 
 =head1 DESCRIPTION
 

@@ -5,10 +5,13 @@ use warnings::register;
 use Carp qw(croak);
 use vars qw($VERSION);
 
+use Locale::Object;
+use base qw( Locale::Object );
+
 use Locale::Object::Country;
 use Locale::Object::DB;
 
-$VERSION = "0.11";
+$VERSION = "0.12";
 
 my $db = Locale::Object::DB->new();
 
@@ -16,17 +19,6 @@ my $db = Locale::Object::DB->new();
 my $existing = {};
 
 my $class;
-
-sub new
-{
-  my $class = shift;
-  my %params = @_;
-
-  my $self = bless {}, $class;
-  
-  # Initialize the new object or return an existing one.
-  $self->init(%params);
-}
 
 # Initialize the object.
 sub init
@@ -112,7 +104,7 @@ sub _make_language
   my $code = $attributes[1];
   
   # The attributes we want to set.
-  my @attr_names = qw(_code_alpha2 _code_alpha3 _name);
+  my @attr_names = qw(code_alpha2 code_alpha3 name);
   
   # Initialize a loop counter.
   my $counter = 0;
@@ -120,7 +112,7 @@ sub _make_language
   foreach my $current_attribute (@attr_names)
   {
     # Set the attributes of the entry for this currency code in the singleton hash.
-    $self->{$current_attribute} = $attributes[$counter];
+    $self->$current_attribute( $attributes[$counter] );
 
     $counter++; 
   }
@@ -169,24 +161,44 @@ sub _set_countries
     $self->{'_countries'} = \@countries;       
 }
 
-# Small methods that return object attributes.
-# Will refactor these into an AUTOLOAD later.
+# Get/set attributes.
 
 sub name
 {
   my $self = shift;  
+
+  if (@_)
+  {
+    $self->{_name} = shift;
+    return $self;
+  }
+
   $self->{_name};
 }
 
 sub code_alpha2
 {
-  my $self = shift;  
+  my $self = shift;
+
+  if (@_)
+  {
+    $self->{_code_alpha2} = shift;
+    return $self;
+  }
+  
   $self->{_code_alpha2};
 }  
 
 sub code_alpha3
 {
   my $self = shift;  
+
+  if (@_)
+  {
+    $self->{_code_alpha3} = shift;
+    return $self;
+  }
+
   $self->{_code_alpha3};
 }  
 
@@ -232,7 +244,7 @@ Locale::Object::Language - language information objects
 
 =head1 VERSION
 
-0.11
+0.12
 
 =head1 DESCRIPTION
 

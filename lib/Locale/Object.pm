@@ -4,13 +4,17 @@ use strict;
 use warnings::register;
 use vars qw($VERSION);
 
-$VERSION = "0.51";
-
-# Nobody home.
+$VERSION = "0.52";
 
 sub new
 {
-  return "This module is a placeholder for the top level of the Locale::Object namespace; it contains documentation only. For functionality, please use one of the associated modules. See perldoc Locale::Object for more information.";
+  my $class = shift;
+  my %params = @_;
+
+  my $self = bless {}, $class;
+  
+  # Initialize the new object or return an existing one.
+  $self->init(%params);
 }
 
 1;
@@ -32,6 +36,8 @@ The C<Locale::Object> group of modules attempts to provide locale-related inform
 At present, the modules are:
 
 =over 4
+
+* L<Locale::Object> - contains some common functionality for the other modules
 
 * L<Locale::Object::Country> - objects representing countries
 

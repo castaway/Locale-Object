@@ -1,3 +1,10 @@
+2003-12-18: 0.52
+            * Made Continent.pm, Country.pm, Currency.pm and Language.pm 
+              subclasses of Object.pm so they could share one new() method for
+              code efficiency. Also fixed them to have get/set methods for
+              internal attributes to improve robustness. Thanks to JDUNCAN
+              for both these suggestions.
+              
 2003-12-18: 0.51
             * Slight documentation patch.
 

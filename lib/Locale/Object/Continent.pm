@@ -5,10 +5,13 @@ use warnings::register;
 use Carp qw(croak);
 use vars qw($VERSION);
 
+use Locale::Object;
+use base qw( Locale::Object );
+
 use Locale::Object::Country;
 use Locale::Object::DB;
 
-$VERSION = "0.22";
+$VERSION = "0.23";
 
 my $db = Locale::Object::DB->new();
 
@@ -19,23 +22,6 @@ my $existing = {};
 my %continents = map { $_ => undef }
   ('Africa', 'Asia', 'Europe', 'North America', 'Oceania', 'South America');
   
-# Call init() with the parameters we got.
-sub new
-{
-  my $class = shift;
-  my %params = @_;
-  
-  # New Continent object.
-  my $self = bless {}, $class;
-  
-  # Check for pre-existing objects. Return it if there is one.
-  my $continent = $self->exists($params{name});
-  return $continent if $continent;
-  
-  # If not, initialize a new one.
-  $self->init(%params);
-}
-
 # Initialize the object.
 sub init
 {
@@ -179,7 +165,7 @@ Locale::Object::Continent - continent information objects
 
 =head1 VERSION
 
-0.22
+0.23
 
 =head1 DESCRIPTION
 
