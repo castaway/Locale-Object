@@ -11,7 +11,7 @@ Module::Build->new(
                                       perl                              => '5.6.0',
                                       DateTime::TimeZone                => 0.2505,
                                       DBI                               => 0,
-                                      DBD::SQLite                       => 0,
+                                      DBD::SQLite2                      => 0,
                                       Scalar::Util                      => 1.10
                                      },
                    build_requires => {
