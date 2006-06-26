@@ -491,8 +491,8 @@ See the credits for L<Locale::Object>.
 
 =head1 LEGAL
 
-Copyright 2003-2005 Earle Martin. All rights reserved.
+Copyright 2003-2004 Fotango Ltd. All rights reserved. L<http://opensource.fotango.com/>
 
-This module is released under the same license as Perl itself, and is provided on an "as is" basis. The author makes no warranties of any kind, either expressed or implied, as to the accuracy and/or utility of any results obtained from its use. However, if you do find something wrong with the results, please let the author know. Thanks.
+This module is released under the same license as Perl itself, and is provided on an "as is" basis. The author and Fotango Ltd make no warranties of any kind, either expressed or implied, as to the accuracy and/or utility of any results obtained from its use. However, if you do find something wrong with the results, please let the author know. Thanks.
 
 =cut

@@ -3,15 +3,17 @@
 use warnings;
 
 use Module::Build;
+use FindBin qw( $Bin );
 
-Module::Build->new(
+my $mb = Module::Build->new(
                    module_name    => 'Locale::Object',
                    license        => 'perl',
                    requires       => {
                                       perl                              => '5.6.0',
-                                      DateTime::TimeZone                => 0.2505,
+                                      'DateTime::TimeZone'              => 0.4,
+                                      DateTime                          => 0.3,
                                       DBI                               => 0,
-                                      DBD::SQLite2                      => 0,
+                                      DBD::SQLite                       => 0,
                                       Scalar::Util                      => 1.10
                                      },
                    build_requires => {
@@ -19,4 +21,15 @@ Module::Build->new(
                                       Test::More    => 0,
                                       Test::Pod     => 0
                                      }
-                  )->create_build_script;
+                  );
+
+eval { require DBI; require DBD::SQLite; 1 }
+  or die "requires DBD::SQLite";
+unlink("$Bin/lib/Locale/Object/locale.db");
+my $dbh = DBI->connect("dbi:SQLite:$Bin/lib/Locale/Object/locale.db");
+open DUMP, "$Bin/locale.sql" or die $!;
+{ local $/ = ";\n"; $dbh->do($_) while <DUMP> }
+close DUMP;
+
+
+$mb->create_build_script;

@@ -3,8 +3,9 @@
 use warnings;
 use strict;
 
-use Test::More tests => 16;
+use Test::More tests => 17;
 
+use DateTime::TimeZone;
 use Locale::Object::Country;
 
 my $afghanistan = Locale::Object::Country->new( code_alpha2 => 'af' );
@@ -75,19 +76,9 @@ is( $wrong_defined, 0, 'an object was not made for an incorrect code' );
 my $britain = Locale::Object::Country->new( code_alpha2 => 'gb' );
 
 #14
-ok( $britain->all_timezones->[0]->name eq 'Europe/London' && $britain->all_timezones->[1]->name eq 'Europe/Belfast', 'all_timezones gave the right list');
+is( $britain->all_timezones->[0]->name, 'Europe/London', 'all timezones');
+is( $britain->all_timezones->[1]->name, DateTime::TimeZone->links->{'Europe/Belfast'}, 'belfast is a deprecated alias for London');
 
-#15
 ok( my $antarctica = Locale::Object::Country->new( code_alpha2 => 'aq' ), 'load Antarctica');
 
-#16
 ok( my $congo = Locale::Object::Country->new( code_alpha2 => 'cd' ), 'load Congo');
-
-# Remove __END__ to get a dump of the data structures created by this test.
-__END__
-print "\n==========================\n";
-print "| DATA STRUCTURE FOLLOWS |\n";
-print "==========================\n\n";
-
-use Data::Dumper;
-print Dumper $afghanistan;

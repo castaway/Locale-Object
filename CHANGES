@@ -1,13 +1,7 @@
-2005-08-12: 0.73
-            * Switched to using DBD::SQLite2 to access the database, on a
-              tip from Nathan McFarland. This is a workaround for the fact that 
-              SQLite's internal format has changed. I've received several requests 
-              to release a new version using the SQLite 3 format for the DB, and 
-              despite a protracted period of trying very hard to convert it (see
-              http://use.perl.org/~hex/journal/24191) I still haven't managed to 
-              get it working yet, hence this workaround. Sorry for the delay, 
-              everyone, I'll keep trying to get that new version working.
-            
+2006-06-26: 0.73
+            * Data is stored as SQL and imported instead of a binary sqlite database
+            * deps have been updated to accomodate changes in DateTime
+
 2004-04-24: 0.72
             * Added a note to Language.pm about obsolete ISO 639 codes on a tip from 
               Robin Szemeti.

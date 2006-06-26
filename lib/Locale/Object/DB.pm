@@ -8,7 +8,7 @@ use vars qw($VERSION);
 use DBI;
 use File::Spec;
 
-$VERSION = "0.34";
+$VERSION = "0.33";
 
 # The database should be in the same directory as this file. Get the location.
 my (undef, $path) = File::Spec->splitpath(__FILE__);
@@ -27,7 +27,7 @@ sub new
 }
 
 # Connect to our database.
-my $dbh = DBI->connect("dbi:SQLite2:dbname=$db", "", "", 
+my $dbh = DBI->connect("dbi:SQLite:dbname=$db", "", "", 
 { 
   PrintError => 1, RaiseError => 1, AutoCommit => 1
 } ) or croak DBI::errstr;
@@ -225,9 +225,9 @@ See the credits for L<Locale::Object>.
 
 =head1 LEGAL
 
-Copyright 2003-2005 Earle Martin. All rights reserved. 
+Copyright 2003-2004 Fotango Ltd. All rights reserved. L<http://opensource.fotango.com/>
 
-This module is released under the same license as Perl itself, and is provided on an "as is" basis. The author makes no warranties of any kind, either expressed or implied, as to the accuracy and/or utility of any results obtained from its use. However, if you do find something wrong with the results, please let the author know. Thanks.
+This module is released under the same license as Perl itself, and is provided on an "as is" basis. The author and Fotango Ltd make no warranties of any kind, either expressed or implied, as to the accuracy and/or utility of any results obtained from its use. However, if you do find something wrong with the results, please let the author know. Thanks.
 
 =cut
 

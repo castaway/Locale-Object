@@ -553,13 +553,13 @@ Earle Martin <EMARTIN@cpan.org>
 
 =head1 CREDITS
 
-Original concept by Pierre Denis (PDENIS). Help received Tom Insam (TOMI) and James Duncan (JDUNCAN). Most of the OO concepts involved I learnt from Damian Conway (DCONWAY)'s excellent book "Object Oriented Perl" (ISBN 1-884777-79-1). Ask Bjoern Hansen (ABH) provided a patch for a bug in v0.7.
+Original concept: Pierre Denis (PDENIS). I had much useful assistance from Pierre, Tom Insam (TOMI) - who contributed to my knowledge of DBI - and James Duncan (JDUNCAN). Most of the OO concepts involved I learnt from Damian Conway (DCONWAY)'s excellent book "Object Oriented Perl" (ISBN 1-884777-79-1). Ask Bjoern Hansen (ABH) provided a patch for a bug in v0.7.
 
 =head1 COPYRIGHT
 
-Copyright 2003-2005 Earle Martin. All rights reserved.
+Copyright 2003-2004 Fotango Ltd. All rights reserved. L<http://opensource.fotango.com/>
 
-This module is released under the same license as Perl itself, and is provided on an "as is" basis. The author makes no warranties of any kind, either expressed or implied, as to the accuracy and/or utility of any results obtained from its use. However, if you do find something wrong with the results, please let the author know. Thanks.
+This module is released under the same license as Perl itself, and is provided on an "as is" basis. The author and Fotango Ltd make no warranties of any kind, either expressed or implied, as to the accuracy and/or utility of any results obtained from its use. However, if you do find something wrong with the results, please let the author know. Thanks.
 
 =head1 SEE ALSO
 
