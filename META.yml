@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name: Locale-Object
-version: 0.73
+version: 0.74
 author:
   - Earle Martin <EMARTIN@cpan.org>
 abstract: OO locale information

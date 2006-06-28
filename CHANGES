@@ -1,6 +1,10 @@
+2006-06-28: 0.74
+            * CPAN-- # allowing comaint to upload a version that already exists.
+            * Bump the version number to avoid CPAN confuzzlement.
+            
 2006-06-26: 0.73
-            * Data is stored as SQL and imported instead of a binary sqlite database
-            * deps have been updated to accomodate changes in DateTime
+            * Data is stored as SQL and imported instead of a binary sqlite database.
+            * Deps have been updated to accomodate changes in DateTime.
 
 2004-04-24: 0.72
             * Added a note to Language.pm about obsolete ISO 639 codes on a tip from 
