@@ -1,7 +1,6 @@
 Build.PL
 CHANGES
 INSTALL
-NINJA
 locale.sql
 MANIFEST
 Makefile.PL

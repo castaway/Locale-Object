@@ -10,7 +10,7 @@ use Locale::Object::Country;
 use Locale::Object::Currency;
 use Locale::Object::Language;
 
-$VERSION = "0.74";
+$VERSION = "0.75";
 
 sub new
 {
@@ -391,7 +391,7 @@ __END__
 
 =head1 NAME
 
-Locale::Object - OO locale information
+Locale::Object - An object-oriented representation of locale information.
 
 =head1 DESCRIPTION
 
@@ -543,23 +543,35 @@ This method will do its best to make the attributes of the object correspond wit
 
 =head1 AUTHOR
 
-Earle Martin <EMARTIN@cpan.org>
+Earle Martin <hex@cpan.org>
 
 =over 4 
 
-=item L<http://purl.oclc.org/net/earlemartin/>
+=item L<http://downlode.org/Code/Perl/>
 
 =back
 
 =head1 CREDITS
 
-Original concept: Pierre Denis (PDENIS). I had much useful assistance from Pierre, Tom Insam (TOMI) - who contributed to my knowledge of DBI - and James Duncan (JDUNCAN). Most of the OO concepts involved I learnt from Damian Conway (DCONWAY)'s excellent book "Object Oriented Perl" (ISBN 1-884777-79-1). Ask Bjoern Hansen (ABH) provided a patch for a bug in v0.7.
+=over 4
+
+=item * Original concept: Pierre Denis (PDENIS)
+
+=item * Assistance: Tom Insam (TOMI), James Duncan (JDUNCAN)
+
+=item * Teaching: Damian Conway (DCONWAY)'s excellent book "Object Oriented Perl" (ISBN 1884777791)
+
+=item * Bugfixes, patches: Ask Bjoern Hansen (ABH), Tom Insam again
+
+=item * Tips, testing: Jost Krieger, Barbie (BARBIE), Nathan McFarland (NMCFARL)
+
+=back
 
 =head1 COPYRIGHT
 
-Copyright 2003-2004 Fotango Ltd. All rights reserved. L<http://opensource.fotango.com/>
+Copyright 2003-2007 Earle Martin. All rights reserved.
 
-This module is released under the same license as Perl itself, and is provided on an "as is" basis. The author and Fotango Ltd make no warranties of any kind, either expressed or implied, as to the accuracy and/or utility of any results obtained from its use. However, if you do find something wrong with the results, please let the author know. Thanks.
+This module is released under the same license as Perl itself, and is provided on an "as is" basis. No warranties of any kind are made, either expressed or implied, as to the accuracy and/or utility of any results obtained from its use. However, if you do find something wrong with the results, please let the author know. Thanks.
 
 =head1 SEE ALSO
 

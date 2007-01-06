@@ -12,4 +12,6 @@ The install process is a standard Module::Build install:
     ./Build test
     ./Build install
     
-    
+To install into a custom lib path, use the install_path directive:
+
+    perl Build.PL install_path=lib=/path/to/my/lib    

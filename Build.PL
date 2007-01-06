@@ -2,34 +2,68 @@
 
 use warnings;
 
-use Module::Build;
 use FindBin qw( $Bin );
+use Getopt::Long;
+use Module::Build;
 
+my $verbose;
+GetOptions ('verbose' => \$verbose);
+                                                                                                           
 my $mb = Module::Build->new(
-                   module_name    => 'Locale::Object',
-                   license        => 'perl',
-                   requires       => {
-                                      perl                              => '5.6.0',
-                                      'DateTime::TimeZone'              => 0.4,
-                                      DateTime                          => 0.3,
-                                      DBI                               => 0,
-                                      DBD::SQLite                       => 0,
-                                      Scalar::Util                      => 1.10
-                                     },
-                   build_requires => {
-                                      Module::Build => '0.21',
-                                      Test::More    => 0,
-                                      Test::Pod     => 0
-                                     }
-                  );
+  'module_name' => 'Locale::Object',
+  'license'     => 'perl',
+  'requires'    => {
+    'perl'               => '5.6.0',
+    'DateTime::TimeZone' => 0.4,
+    'DateTime'           => 0.3,
+    'DBI'                => 0,
+    'DBD::SQLite'        => 0,
+    'Scalar::Util'       => 1.10,
+  },
+  'build_requires' => {
+    'Module::Build' => '0.21',
+    'Test::More'    => 0,
+    'Test::Pod'     => 0,
+  },
+);
 
-eval { require DBI; require DBD::SQLite; 1 }
-  or die "requires DBD::SQLite";
-unlink("$Bin/lib/Locale/Object/locale.db");
-my $dbh = DBI->connect("dbi:SQLite:$Bin/lib/Locale/Object/locale.db");
-open DUMP, "$Bin/locale.sql" or die $!;
-{ local $/ = ";\n"; $dbh->do($_) while <DUMP> }
-close DUMP;
+eval {
+  require DBI;
+  require DBD::SQLite;
+  1;
+};
 
+if ($@) {
+  print "DBD::SQLite is required to run Build.PL. Please check your system configuration.\n";
+  exit 1;
+}
+
+my $db = "$Bin/lib/Locale/Object/locale.db";
+
+unlink($db);
+
+my $dbh;
+
+{
+  no warnings 'once'; # shut up about $DBI::errstr
+  
+  $dbh = DBI->connect("dbi:SQLite:$db")
+  or die "Couldn't connect to $db: $DBI::errstr";
+}
+
+open (my $SQL, '<', "$Bin/locale.sql")
+  or die "Couldn't open SQL file ($Bin/locale.sql) to create database: $!";
+
+{
+  local $/ = ";\n";
+  
+  while (<$SQL>) {
+    next unless $_;
+    print $_ if $verbose;
+    $dbh->do($_) or die $dbh->errstr;
+  }
+}
+
+close $SQL;
 
 $mb->create_build_script;

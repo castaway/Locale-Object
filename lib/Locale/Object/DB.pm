@@ -8,7 +8,7 @@ use vars qw($VERSION);
 use DBI;
 use File::Spec;
 
-$VERSION = "0.33";
+$VERSION = '0.75';
 
 # The database should be in the same directory as this file. Get the location.
 my (undef, $path) = File::Spec->splitpath(__FILE__);
@@ -211,11 +211,11 @@ The database file itself is named C<locale.db> and must reside in the same direc
 
 =head1 AUTHOR
 
-Earle Martin <EMARTIN@cpan.org>
+Earle Martin <hex@cpan.org>
 
 =over 4 
 
-=item L<http://purl.oclc.org/net/earlemartin/>
+=item L<http://downlode.org/Code/Perl/>
 
 =back
 
@@ -225,9 +225,9 @@ See the credits for L<Locale::Object>.
 
 =head1 LEGAL
 
-Copyright 2003-2004 Fotango Ltd. All rights reserved. L<http://opensource.fotango.com/>
+Copyright 2003-2007 Earle Martin. All rights reserved.reserved. L<http://purl.org/net/earlemartin/>
 
-This module is released under the same license as Perl itself, and is provided on an "as is" basis. The author and Fotango Ltd make no warranties of any kind, either expressed or implied, as to the accuracy and/or utility of any results obtained from its use. However, if you do find something wrong with the results, please let the author know. Thanks.
+This module is released under the same license as Perl itself, and is provided on an "as is" basis. No warranty is made of any kind, either expressed or implied, as to the accuracy and/or utility of any results obtained from its use. However, if you do find something wrong with the results, please let the author know. Thanks.
 
 =cut
 

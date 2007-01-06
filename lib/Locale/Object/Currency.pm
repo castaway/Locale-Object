@@ -11,7 +11,7 @@ use base qw( Locale::Object );
 use Locale::Object::Country;
 use Locale::Object::DB;
 
-$VERSION = "0.23";
+$VERSION = '0.75';
 
 my $db = Locale::Object::DB->new();
 
@@ -333,11 +333,11 @@ The database of currency information is not perfect by a long stretch. If you fi
 
 =head1 AUTHOR
 
-Earle Martin <EMARTIN@cpan.org>
+Earle Martin <hex@cpan.org>
 
 =over 4 
 
-=item L<http://purl.oclc.org/net/earlemartin/>
+=item L<http://downlode.org/Code/Perl/>
 
 =back
 
@@ -347,9 +347,9 @@ See the credits for L<Locale::Object>.
 
 =head1 LEGAL
 
-Copyright 2003-2004 Fotango Ltd. All rights reserved. L<http://opensource.fotango.com/>
+Copyright 2003-2007 Earle Martin. All rights reserved.
 
-This module is released under the same license as Perl itself, and is provided on an "as is" basis. The author and Fotango Ltd make no warranties of any kind, either expressed or implied, as to the accuracy and/or utility of any results obtained from its use. However, if you do find something wrong with the results, please let the author know. Thanks.
+This module is released under the same license as Perl itself, and is provided on an "as is" basis. No warranty of any kind is made, either expressed or implied, as to the accuracy and/or utility of any results obtained from its use. However, if you do find something wrong with the results, please let the author know. Thanks.
 
 =cut
 
