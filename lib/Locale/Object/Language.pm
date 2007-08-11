@@ -1,9 +1,8 @@
 package Locale::Object::Language;
 
 use strict;
-use warnings::register;
+use warnings;;
 use Carp;
-use vars qw($VERSION);
 
 use Locale::Object;
 use base qw( Locale::Object );
@@ -11,7 +10,7 @@ use base qw( Locale::Object );
 use Locale::Object::Country;
 use Locale::Object::DB;
 
-$VERSION = '0.75';
+our $VERSION = '0.76';
 
 my $db = Locale::Object::DB->new();
 

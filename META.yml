@@ -1,10 +1,9 @@
---- #YAML:1.0
+---
 name: Locale-Object
-version: 0.75
+version: 0.76
 author:
-  - Earle Martin <hex@cpan.org>
-abstract: |-
-  An object-oriented representation of locale information.
+  - 'Earle Martin <hex@cpan.org>'
+abstract: An object-oriented representation of locale information.
 license: perl
 resources:
   license: http://dev.perl.org/licenses/
@@ -16,33 +15,34 @@ requires:
   Scalar::Util: 1.1
   perl: 5.6.0
 build_requires:
+  DBD::SQLite: 0
+  DBI: 0
   Module::Build: 0.21
   Test::More: 0
   Test::Pod: 0
 provides:
   Locale::Object:
     file: lib/Locale/Object.pm
-    version: 0.75
+    version: 0.76
   Locale::Object::Continent:
     file: lib/Locale/Object/Continent.pm
-    version: 0.75
+    version: 0.76
   Locale::Object::Country:
     file: lib/Locale/Object/Country.pm
-    version: 0.35
+    version: 0.76
   Locale::Object::Currency:
     file: lib/Locale/Object/Currency.pm
-    version: 0.75
+    version: 0.76
   Locale::Object::Currency::Converter:
     file: lib/Locale/Object/Currency/Converter.pm
-    version: 0.75
+    version: 0.76
   Locale::Object::DB:
     file: lib/Locale/Object/DB.pm
-    version: 0.75
+    version: 0.76
   Locale::Object::Language:
     file: lib/Locale/Object/Language.pm
-    version: 0.75
+    version: 0.76
 generated_by: Module::Build version 0.2805
 meta-spec:
-  url: |-
-    http://module-build.sourceforge.net/META-spec-v1.2.html
+  url: http://module-build.sourceforge.net/META-spec-v1.2.html
   version: 1.2

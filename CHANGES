@@ -1,3 +1,13 @@
+2007-08-11: 0.76
+  - Jess Robinson and Matt S. Trout reported that using Getopt::Long in
+    Build.PL for the verbose option was eating up options meant to go to
+    Module::Build - fixed with a suggestion from Jos Boumans. Also renamed
+    the --verbose option to --showsql.
+  - DBD::SQLite wasn't in build_requires (Matt again).
+  - Pound symbol (£) was missing from the SQL (Jess again).
+  - Removed unnecessary use of warnings::register in most modules.
+  - Version number for Locale::Object::Country was incorrect.
+
 2007-01-06: 0.75
   - More helpful Build.PL output. Will display the SQL being run if you use
     the flag --verbose.

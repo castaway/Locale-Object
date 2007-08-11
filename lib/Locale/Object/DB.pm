@@ -1,14 +1,13 @@
 package Locale::Object::DB;
 
 use strict;
-use warnings::register;
+use warnings;;
 use Carp qw(croak);
-use vars qw($VERSION);
 
 use DBI;
 use File::Spec;
 
-$VERSION = '0.75';
+our $VERSION = '0.76';
 
 # The database should be in the same directory as this file. Get the location.
 my (undef, $path) = File::Spec->splitpath(__FILE__);

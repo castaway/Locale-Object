@@ -3,11 +3,9 @@
 use warnings;
 
 use FindBin qw( $Bin );
-use Getopt::Long;
 use Module::Build;
 
-my $verbose;
-GetOptions ('verbose' => \$verbose);
+my $verbose = grep(/^--showsql$/, @ARGV);
                                                                                                            
 my $mb = Module::Build->new(
   'module_name' => 'Locale::Object',
@@ -21,6 +19,8 @@ my $mb = Module::Build->new(
     'Scalar::Util'       => 1.10,
   },
   'build_requires' => {
+    'DBI'           => 0,
+    'DBD::SQLite'   => 0,
     'Module::Build' => '0.21',
     'Test::More'    => 0,
     'Test::Pod'     => 0,

@@ -695,7 +695,7 @@ INSERT INTO currency VALUES('bn','ringgit','BND','096','B$','sen',100);
 INSERT INTO currency VALUES('ci','franc','XOF','952','CFAF','centimes',100);
 INSERT INTO currency VALUES('do','peso','DOP','214','RD$','centavos',100);
 INSERT INTO currency VALUES('fk','pound','FKP','238','F','pence',100);
-INSERT INTO currency VALUES('gb','pound','GBP','826','','pence',100);
+INSERT INTO currency VALUES('gb','pound','GBP','826','£','pence',100);
 INSERT INTO currency VALUES('ir','rial','IRR','364','Rls','','');
 INSERT INTO currency VALUES('kp','won','KPW','408','Wn','chon',100);
 INSERT INTO currency VALUES('kr','won','KRW','410','W','chon',100);

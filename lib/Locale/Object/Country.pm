@@ -1,9 +1,8 @@
 package Locale::Object::Country;
 
 use strict;
-use warnings::register;
+use warnings;;
 use Carp;
-use vars qw($VERSION);
 
 use Locale::Object;
 use base qw( Locale::Object );
@@ -15,7 +14,7 @@ use Locale::Object::Language;
 
 use DateTime::TimeZone;
 
-$VERSION = "0.35";
+our $VERSION = '0.76';
 
 my $db = Locale::Object::DB->new();
 

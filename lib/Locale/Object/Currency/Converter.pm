@@ -1,11 +1,12 @@
 package Locale::Object::Currency::Converter;
 
 use strict;
-use warnings::register;
+use warnings;;
 use Carp;
-use vars qw($VERSION);
 
 use Scalar::Util qw(looks_like_number);
+
+our $VERSION = '0.76';
 
 my ($use_xe, $xe_error, $use_yahoo, $yahoo_error);
 
@@ -38,7 +39,6 @@ else
   $use_yahoo = 1;
 }
 
-$VERSION = '0.75';
 
 sub new
 {

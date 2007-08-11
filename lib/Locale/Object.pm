@@ -1,8 +1,7 @@
 package Locale::Object;
 
 use strict;
-use warnings::register;
-use vars qw($VERSION);
+use warnings;
 use Carp;
 
 use Locale::Object::Continent;
@@ -10,7 +9,7 @@ use Locale::Object::Country;
 use Locale::Object::Currency;
 use Locale::Object::Language;
 
-$VERSION = "0.75";
+our $VERSION = '0.76';
 
 sub new
 {
