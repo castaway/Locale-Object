@@ -1,3 +1,13 @@
+2007-09-04: 0.77
+  - The Unicode edition. Added currency symbols for numerous currencies
+    that had previously been spelt out, like "slashed C" for the Costa Rican
+    colón, and "Tug" instead of the the Mongolian tögrög symbol. Improved
+    spelling/accentage of some currency names but most likely some more
+    work is needed. As usual, please let me know of ommissions/inaccuracies.
+    I did not include several symbols that do not currently seem to be
+    well supported, such as "U+20B2: GUARANI SIGN" and "U+17DB: KHMER
+    CURRENCY SYMBOL RIEL".
+	
 2007-08-11: 0.76
   - Jess Robinson and Matt S. Trout reported that using Getopt::Long in
     Build.PL for the verbose option was eating up options meant to go to

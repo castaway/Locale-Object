@@ -7,7 +7,7 @@ use Carp qw(croak);
 use DBI;
 use File::Spec;
 
-our $VERSION = '0.76';
+our $VERSION = '0.77';
 
 # The database should be in the same directory as this file. Get the location.
 my (undef, $path) = File::Spec->splitpath(__FILE__);

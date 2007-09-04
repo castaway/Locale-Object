@@ -48,7 +48,7 @@ The database of locale information used by the L<Locale::Object> modules uses L<
 
 =item * C<name> and C<code> contain ISO 4217 three-letter codes and names for world currencies - see L<http://fx.sauder.ubc.ca/iso4217.html>.
 
-=item * C<symbol>, C<subunit> and C<subunit_amount> contain currency symbols, subunits (such as cents) and the amounts of subunits that comprise a single currency unit (such as 100 [cents in a dollar]). This data was sourced from L<http://fx.sauder.ubc.ca/currency_table.html>.
+=item * C<symbol>, C<subunit> and C<subunit_amount> contain currency symbols, subunits (such as cents) and the amounts of subunits that comprise a single currency unit (such as 100 [cents in a dollar]). This data was sourced from L<http://fx.sauder.ubc.ca/currency_table.html> and L<http://www.wazu.jp/gallery/Test_CurrencySymbols.html>.
 
 =back
 

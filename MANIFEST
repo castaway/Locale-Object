@@ -22,5 +22,4 @@ t/3_continent.t
 t/4_language.t
 t/5_object.t
 t/6_convert.t
-t/bugs.t
 t/meta_pod.t
