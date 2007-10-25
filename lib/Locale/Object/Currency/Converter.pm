@@ -6,7 +6,7 @@ use Carp;
 
 use Scalar::Util qw(looks_like_number);
 
-our $VERSION = '0.77';
+our $VERSION = '0.78';
 
 my ($use_xe, $xe_error, $use_yahoo, $yahoo_error);
 

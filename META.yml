@@ -1,6 +1,6 @@
 ---
 name: Locale-Object
-version: 0.77
+version: 0.78
 author:
   - 'Earle Martin <hex@cpan.org>'
 abstract: An object-oriented representation of locale information.
@@ -23,26 +23,26 @@ build_requires:
 provides:
   Locale::Object:
     file: lib/Locale/Object.pm
-    version: 0.77
+    version: 0.78
   Locale::Object::Continent:
     file: lib/Locale/Object/Continent.pm
-    version: 0.77
+    version: 0.78
   Locale::Object::Country:
     file: lib/Locale/Object/Country.pm
-    version: 0.77
+    version: 0.78
   Locale::Object::Currency:
     file: lib/Locale/Object/Currency.pm
-    version: 0.77
+    version: 0.78
   Locale::Object::Currency::Converter:
     file: lib/Locale/Object/Currency/Converter.pm
-    version: 0.77
+    version: 0.78
   Locale::Object::DB:
     file: lib/Locale/Object/DB.pm
-    version: 0.77
+    version: 0.78
   Locale::Object::Language:
     file: lib/Locale/Object/Language.pm
-    version: 0.77
-generated_by: Module::Build version 0.2805
+    version: 0.78
+generated_by: Module::Build version 0.28
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.2.html
   version: 1.2

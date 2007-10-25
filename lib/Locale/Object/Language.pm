@@ -10,7 +10,7 @@ use base qw( Locale::Object );
 use Locale::Object::Country;
 use Locale::Object::DB;
 
-our $VERSION = '0.77';
+our $VERSION = '0.78';
 
 my $db = Locale::Object::DB->new();
 

@@ -14,7 +14,7 @@ use Locale::Object::Language;
 
 use DateTime::TimeZone;
 
-our $VERSION = '0.77';
+our $VERSION = '0.78';
 
 my $db = Locale::Object::DB->new();
 
