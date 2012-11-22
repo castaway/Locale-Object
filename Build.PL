@@ -9,7 +9,7 @@ my $verbose = grep(/^--showsql$/, @ARGV);
                                                                                                            
 my $mb = Module::Build->new(
   'module_name' => 'Locale::Object',
-  'license'     => 'perl',
+  'license'     => 'unrestricted',
   'requires'    => {
     'perl'               => '5.6.0',
     'DateTime::TimeZone' => 0.4,

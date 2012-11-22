@@ -203,22 +203,10 @@ Which will list you all the currencies used in that continent. See the documenta
 
 =head1 AUTHOR
 
-Earle Martin <hex@cpan.org>
+Originally by Earle Martin
 
-=over 4 
+=head1 COPYRIGHT AND LICENSE
 
-=item L<http://downlode.org/Code/Perl/>
-
-=back
-
-=head1 CREDITS
-
-See the credits for L<Locale::Object>.
-
-=head1 LEGAL
-
-Copyright 2003-2007 Earle Martin. All rights reserved.
-
-This module is released under the same license as Perl itself, and is provided on an "as is" basis. No warranty of any kind is made, either expressed or implied, as to the accuracy and/or utility of any results obtained from its use. However, if you do find something wrong with the results, please let the author know. Thanks.
+Originally by Earle Martin. To the extent possible under law, the author has dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty. You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 
 =cut

@@ -6,6 +6,7 @@ MANIFEST
 Makefile.PL
 META.yml
 README
+COPYING
 docs/database.pod
 lib/copy-for-test.PL
 lib/Locale/Object.pm
@@ -23,3 +24,4 @@ t/4_language.t
 t/5_object.t
 t/6_convert.t
 t/meta_pod.t
+META.json

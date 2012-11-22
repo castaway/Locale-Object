@@ -9,7 +9,7 @@ use Locale::Object::Country;
 use Locale::Object::Currency;
 use Locale::Object::Language;
 
-our $VERSION = '0.78';
+our $VERSION = '0.79';
 
 sub new
 {
@@ -542,35 +542,11 @@ This method will do its best to make the attributes of the object correspond wit
 
 =head1 AUTHOR
 
-Earle Martin <hex@cpan.org>
+Originally by Earle Martin
 
-=over 4 
+=head1 COPYRIGHT AND LICENSE
 
-=item L<http://downlode.org/Code/Perl/>
-
-=back
-
-=head1 CREDITS
-
-=over 4
-
-=item * Original concept: Pierre Denis (PDENIS)
-
-=item * Assistance: Tom Insam (TOMI), James Duncan (JDUNCAN)
-
-=item * Teaching: Damian Conway (DCONWAY)'s excellent book "Object Oriented Perl" (ISBN 1884777791)
-
-=item * Bugfixes, patches: Ask Bjoern Hansen (ABH), Tom Insam again
-
-=item * Tips, testing: Jost Krieger, Barbie (BARBIE), Nathan McFarland (NMCFARL)
-
-=back
-
-=head1 COPYRIGHT
-
-Copyright 2003-2007 Earle Martin. All rights reserved.
-
-This module is released under the same license as Perl itself, and is provided on an "as is" basis. No warranties of any kind are made, either expressed or implied, as to the accuracy and/or utility of any results obtained from its use. However, if you do find something wrong with the results, please let the author know. Thanks.
+Originally by Earle Martin. To the extent possible under law, the author has dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty. You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 
 =head1 SEE ALSO
 
