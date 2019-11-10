@@ -20,10 +20,13 @@ my $mb = Module::Build->new(
   },
   'build_requires' => {
     'DBI'           => 0,
-    'DBD::SQLite'   => 0,
     'Module::Build' => '0.21',
     'Test::More'    => 0,
     'Test::Pod'     => 0,
+  },
+  'configure_requires' => {
+      'DBD::SQLite'   => 0,
+      'Module::Build' => '0.40',
   },
 );
 
