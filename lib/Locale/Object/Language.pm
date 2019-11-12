@@ -288,7 +288,7 @@ C<Locale::Object::Language> allows you to create objects containing information 
 
     my $eng = Locale::Object::Language->new( code_alpha3 => 'eng' );
 
-The C<new> method creates an object. It takes a single-item hash as an argument - valid options to pass are ISO 3166 values - 'code_alpha2', 'code_alpha3' and 'name' (see L<Locale::Object::DB::Schemata> for details on these).
+The C<new> method creates an object. It takes a single-item hash as an argument - valid options to pass are ISO 3166 values - 'code_alpha2', 'code_alpha3' and 'name'.
 
 The objects created are singletons; if you try and create a currency object when one matching your specification already exists, C<new()> will return the original one.
 
@@ -302,7 +302,7 @@ These methods retrieve the values of the attributes in the object whose name the
 
     my @countries = $eng->countries;
 
-Returns an array (in array context, otherwise a reference) of L<Locale::Object::Country> objects with their ISO 3166 alpha2 codes as keys (see L<Locale::Object::DB::Schemata> for more details on those) for all countries using this currency in array context, or a reference in scalar context. The objects have their own attribute methods, so you can do things like this for example:
+Returns an array (in array context, otherwise a reference) of L<Locale::Object::Country> objects with their ISO 3166 alpha2 codes as keys for all countries using this currency in array context, or a reference in scalar context. The objects have their own attribute methods, so you can do things like this for example:
 
     foreach my $place (@countries)
     {
