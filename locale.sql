@@ -1149,7 +1149,7 @@ INSERT INTO language VALUES('se','sme','Northern Sami');
 INSERT INTO language VALUES(NULL,'sgn','Sign Languages');
 INSERT INTO language VALUES(NULL,'bla','Siksika');
 INSERT INTO language VALUES('sd','snd','Sindhi');
-INSERT INTO language VALUES('si','sin','Singhalese');
+INSERT INTO language VALUES('si','sin','Singhala');
 INSERT INTO language VALUES(NULL,'sit','Sino-Tibetan (Other)');
 INSERT INTO language VALUES(NULL,'sio','Siouan languages');
 INSERT INTO language VALUES(NULL,'sms','Skolt Sami');
