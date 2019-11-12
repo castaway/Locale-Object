@@ -9,7 +9,7 @@ use Locale::Object::Country;
 use Locale::Object::Currency;
 use Locale::Object::Language;
 
-our $VERSION = '0.79';
+our $VERSION = '0.79_01';
 
 sub new
 {
