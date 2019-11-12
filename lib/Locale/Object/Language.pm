@@ -322,7 +322,7 @@ Which will list you all the countries that use in that currency. See the documen
 
     print $eng->official($gb);  # prints 'true'
 
-Give this method a L<Locale::Object::Country> object, and it will return a 'true' or 'false' value for whether the country the object represents has the language represented by your C<Locale::Object::Language> object as an official language. See L<database.pod> for a note about languages in the database.
+Give this method a L<Locale::Object::Country> object, and it will return a 'true' or 'false' value for whether the country the object represents has the language represented by your C<Locale::Object::Language> object as an official language. See L<Locale::Object::Database> for a note about languages in the database.
 
 =head1 OBSOLETE LANGUAGE CODES
 
@@ -330,7 +330,7 @@ ISO 639 is not immune from change, and there are three codes that changed in 199
 
 =head1 KNOWN BUGS
 
-The database of language information is not perfect by a long stretch. In particular, numerous comparatively obscure secondary or regional languages that don't have ISO codes, such as in several African countries and India, are missing. (See note in L<database.pod> about data sources.) Please send any corrections to the author.
+The database of language information is not perfect by a long stretch. In particular, numerous comparatively obscure secondary or regional languages that don't have ISO codes, such as in several African countries and India, are missing. (See note in L<Locale::Object::Database> about data sources.) Please send any corrections to the author.
 
 =head1 AUTHOR
 
