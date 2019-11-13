@@ -28,6 +28,12 @@ my $mb = Module::Build->new(
       'DBD::SQLite'   => 0,
       'Module::Build' => '0.40',
   },
+  meta_merge => {
+    resources => {
+      repository  => 'https://github.com/castaway/Locale-Object',
+    }
+    
+  }
 );
 
 eval {
