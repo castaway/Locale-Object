@@ -51,8 +51,10 @@ SKIP:
   }
 }
 
+$converter->service('Yahoo');
+
 #3
-ok( $converter->service('Yahoo'), 'Resetting currency service worked' );
+is( $converter->{service}, 'yahoo', 'Resetting currency service worked' );
 
 #4
 ok( $converter->from($eur), "Resetting 'from' currency worked" );
