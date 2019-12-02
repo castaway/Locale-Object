@@ -1,3 +1,4 @@
+PRAGMA foreign_keys=on;
 BEGIN TRANSACTION;
 CREATE TABLE continent (
     country_code char(2),
@@ -507,7 +508,8 @@ CREATE TABLE currency (
     symbol         char(20),
     subunit        char(100),
     subunit_amount smallint,
-    PRIMARY KEY  (country_code)
+    PRIMARY KEY  (country_code),
+    FOREIGN KEY (country_code) REFERENCES country(code_alpha2)
 );
 INSERT INTO currency VALUES('af','afghani','AFA','004','Af','puls',100);
 INSERT INTO currency VALUES('al','lek','ALL','008','L','qindarka',100);
@@ -691,9 +693,8 @@ INSERT INTO currency VALUES('vu','vatu','VUV','548','VT','centimes',100);
 INSERT INTO currency VALUES('ve','bolivar','VEB','862','Bs','centimos',100);
 INSERT INTO currency VALUES('vn','dong','VND','704','dashed d, or D','hao or 100 xu',10);
 INSERT INTO currency VALUES('ye','rial','YER','886','YRls','fils',100);
-INSERT INTO currency VALUES('rs','dinar','YUM','891','Din','paras',100);
-INSERT INTO currency VALUES('me','dinar','YUM','891','Din','paras',100);
-INSERT INTO currency VALUES('yu','dinar','YUM','891','Din','paras',100);
+INSERT INTO currency VALUES('rs','dinar','RSD','941','Din','paras',100);
+INSERT INTO currency VALUES('me','Euro','EUR','978','','cents',100);
 INSERT INTO currency VALUES('zm','kwacha','ZMK','894','ZK','ngwee',100);
 INSERT INTO currency VALUES('zw','dollar','ZWD','716','Z$','cents',100);
 INSERT INTO currency VALUES('ba','convertible mark','BAM','977','KM','fennig',100);
@@ -966,7 +967,7 @@ INSERT INTO language VALUES(NULL,'iro','Iroquoian languages');
 INSERT INTO language VALUES('it','ita','Italian');
 INSERT INTO language VALUES(NULL,'jbo','Lojban');
 INSERT INTO language VALUES('ja','jpn','Japanese');
-INSERT INTO language VALUES('jv','jaw','Javanese');
+INSERT INTO language VALUES('jv','jav','Javanese');
 INSERT INTO language VALUES(NULL,'jrb','Judeo-Arabic');
 INSERT INTO language VALUES(NULL,'jpr','Judeo-Persian');
 INSERT INTO language VALUES(NULL,'kbd','Kabardian');
@@ -1249,6 +1250,8 @@ CREATE TABLE language_mappings (
     country      char(2),
     language     char(3),
     official     boolean,
+    FOREIGN KEY (country) REFERENCES country(code_alpha2),
+    FOREIGN KEY (language) REFERENCES language(code_alpha3),
     PRIMARY KEY (id)
 );
 INSERT INTO language_mappings VALUES('ad_0','ad','cat','true');
@@ -1303,7 +1306,7 @@ INSERT INTO language_mappings VALUES('bb_0','bb','eng','true');
 INSERT INTO language_mappings VALUES('bs_0','bs','eng','true');
 INSERT INTO language_mappings VALUES('bh_0','bh','ara','true');
 INSERT INTO language_mappings VALUES('bh_1','bh','eng','false');
-INSERT INTO language_mappings VALUES('bh_2','bh','per','false');
+INSERT INTO language_mappings VALUES('bh_2','bh','fas','false');
 INSERT INTO language_mappings VALUES('bh_3','bh','urd','false');
 INSERT INTO language_mappings VALUES('bd_0','bd','ben','true');
 INSERT INTO language_mappings VALUES('bd_1','bd','eng','false');
@@ -1383,7 +1386,7 @@ INSERT INTO language_mappings VALUES('cx_1','cx','zho','false');
 INSERT INTO language_mappings VALUES('cx_2','cx','msa','false');
 INSERT INTO language_mappings VALUES('cx_3','cx','tgl','false');
 INSERT INTO language_mappings VALUES('cz_0','cz','cze','true');
-INSERT INTO language_mappings VALUES('cz_1','cz','slo','false');
+INSERT INTO language_mappings VALUES('cz_1','cz','slk','false');
 INSERT INTO language_mappings VALUES('dk_0','dk','dan','true');
 INSERT INTO language_mappings VALUES('dk_1','dk','fao','false');
 INSERT INTO language_mappings VALUES('dk_2','dk','kal','false');
@@ -1507,9 +1510,9 @@ INSERT INTO language_mappings VALUES('in_14','in','san','false');
 INSERT INTO language_mappings VALUES('in_15','in','snd','false');
 INSERT INTO language_mappings VALUES('id_0','id','ind','true');
 INSERT INTO language_mappings VALUES('id_1','id','nld','false');
-INSERT INTO language_mappings VALUES('id_2','id','jaw','false');
+INSERT INTO language_mappings VALUES('id_2','id','jav','false');
 INSERT INTO language_mappings VALUES('id_3','id','eng','false');
-INSERT INTO language_mappings VALUES('ir_0','ir','per','true');
+INSERT INTO language_mappings VALUES('ir_0','ir','fas','true');
 INSERT INTO language_mappings VALUES('ir_1','ir','kur','false');
 INSERT INTO language_mappings VALUES('ir_2','ir','ara','false');
 INSERT INTO language_mappings VALUES('iq_0','iq','ara','true');
@@ -1743,7 +1746,7 @@ INSERT INTO language_mappings VALUES('sg_0','sg','msa','true');
 INSERT INTO language_mappings VALUES('sg_1','sg','zho','true');
 INSERT INTO language_mappings VALUES('sg_2','sg','tam','true');
 INSERT INTO language_mappings VALUES('sg_3','sg','eng','true');
-INSERT INTO language_mappings VALUES('sk_0','sk','slo','true');
+INSERT INTO language_mappings VALUES('sk_0','sk','slk','true');
 INSERT INTO language_mappings VALUES('sk_1','sk','hun','false');
 INSERT INTO language_mappings VALUES('si_0','si','slv','true');
 INSERT INTO language_mappings VALUES('si_1','si','scr','false');
@@ -1893,7 +1896,8 @@ INSERT INTO language_mappings VALUES('rs_3','rs','bos','false');
 CREATE TABLE timezone (
     country_code          char(2),
     timezone              char(50),
-    is_default            boolean
+    is_default            boolean,
+    FOREIGN KEY (country_code) REFERENCES country(code_alpha2)
 );
 INSERT INTO timezone VALUES('ag','America/Antigua','true');
 INSERT INTO timezone VALUES('ai','America/Anguilla','true');
@@ -2183,7 +2187,7 @@ INSERT INTO timezone VALUES('ua','Europe/Uzhgorod','false');
 INSERT INTO timezone VALUES('ua','Europe/Zaporozhye','false');
 INSERT INTO timezone VALUES('ua','Europe/Simferopol','false');
 INSERT INTO timezone VALUES('va','Europe/Vatican','true');
-INSERT INTO timezone VALUES('yu','Europe/Belgrade','true');
+INSERT INTO timezone VALUES('rs','Europe/Belgrade','true');
 INSERT INTO timezone VALUES('au','Australia/Lord_Howe','false');
 INSERT INTO timezone VALUES('au','Australia/Hobart','false');
 INSERT INTO timezone VALUES('au','Australia/Melbourne','false');
