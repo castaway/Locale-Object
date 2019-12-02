@@ -25,8 +25,12 @@ my $mb = Module::Build->new(
     'Test::Pod'     => 0,
   },
   'configure_requires' => {
-      'DBD::SQLite'   => 0,
-      'Module::Build' => '0.40',
+    'DBD::SQLite'   => 0,
+    'Module::Build' => '0.40',
+  },
+  recommends => {
+    'Finance::Currency::Convert::Yahoo' => '0.2',
+    'Finance::Currency::Convert::XE' => '0.25',
   },
   meta_merge => {
     resources => {
