@@ -251,6 +251,12 @@ INSERT INTO country VALUES('zm','zmb','894','Zambia',260);
 INSERT INTO country VALUES('zr','zar','180','Zaire',243);
 INSERT INTO country VALUES('zw','zwe','716','Zimbabwe',263);
 INSERT INTO country VALUES('cd','cod','180','Congo, the Democratic Republic of the',243);
+INSERT INTO country VALUES('ax','ala','248','Aland Islands',358);
+INSERT INTO country VALUES('cw','cuw','531','Curacao',599);
+INSERT INTO country VALUES('ss','ssd','728','South Sudan',211);
+INSERT INTO country VALUES('sx','sxm','534','Sint Maarten (Dutch part)',599);
+INSERT INTO country VALUES('mf','maf','663','Saint Martin (French part)',590);
+
 CREATE TABLE continent (
     country_code char(2),
     name         char(13),
@@ -500,6 +506,13 @@ INSERT INTO continent VALUES('wf','Oceania');
 INSERT INTO continent VALUES('yt','Oceania');
 INSERT INTO continent VALUES('aq','Antarctica');
 INSERT INTO continent VALUES('cd','Africa');
+INSERT INTO continent VALUES('ax','Europe');
+INSERT INTO continent VALUES('cw','South America');
+INSERT INTO continent VALUES('ss','Africa');
+INSERT INTO continent VALUES('sx','North America');
+INSERT INTO continent VALUES('mf','North America');
+
+
 CREATE TABLE currency (
     country_code   char(2),
     name           char(100),
@@ -754,6 +767,12 @@ INSERT INTO currency VALUES('vc','dollar','XCD','951','EC$','cents',100);
 INSERT INTO currency VALUES('yt','Euro','EUR','978','null','cents',100);
 INSERT INTO currency VALUES('zr','franc','XAF','950','CFAF','centimes',100);
 INSERT INTO currency VALUES('cd','franc','CDF','180','CFAF','centimes',100);
+INSERT INTO currency VALUES('ax','rupee','INR','356','Rs','paise',100);
+INSERT INTO currency VALUES('cw','rupee','INR','356','Rs','paise',100);
+INSERT INTO currency VALUES('ss','rupee','INR','356','Rs','paise',100);
+INSERT INTO currency VALUES('sx','rupee','INR','356','Rs','paise',100);
+INSERT INTO currency VALUES('mf','rupee','INR','356','Rs','paise',100);
+
 CREATE TABLE language (
     code_alpha2  char(2),
     code_alpha3  char(3),
