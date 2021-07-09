@@ -767,11 +767,11 @@ INSERT INTO currency VALUES('vc','dollar','XCD','951','EC$','cents',100);
 INSERT INTO currency VALUES('yt','Euro','EUR','978','null','cents',100);
 INSERT INTO currency VALUES('zr','franc','XAF','950','CFAF','centimes',100);
 INSERT INTO currency VALUES('cd','franc','CDF','180','CFAF','centimes',100);
-INSERT INTO currency VALUES('ax','rupee','INR','356','Rs','paise',100);
-INSERT INTO currency VALUES('cw','rupee','INR','356','Rs','paise',100);
-INSERT INTO currency VALUES('ss','rupee','INR','356','Rs','paise',100);
-INSERT INTO currency VALUES('sx','rupee','INR','356','Rs','paise',100);
-INSERT INTO currency VALUES('mf','rupee','INR','356','Rs','paise',100);
+INSERT INTO currency VALUES('ax','Euro','EUR','248','€','cents',100);
+INSERT INTO currency VALUES('cw','guilder','ANG','531','NAf','cents',100);
+INSERT INTO currency VALUES('ss','pound','SSP','728','SS£','piasters',100);
+INSERT INTO currency VALUES('sx','guilder','ANG','534','NAf','cents',100);
+INSERT INTO currency VALUES('mf','Euro','EUR','663','€','cents',100);
 
 CREATE TABLE language (
     code_alpha2  char(2),
