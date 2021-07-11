@@ -1912,6 +1912,22 @@ INSERT INTO language_mappings VALUES('rs_0','rs','srp','true');
 INSERT INTO language_mappings VALUES('rs_1','rs','hun','false');
 INSERT INTO language_mappings VALUES('rs_2','rs','rom','false');
 INSERT INTO language_mappings VALUES('rs_3','rs','bos','false');
+-- start from here
+INSERT INTO language_mappings VALUES('ax_0','ax','swe','true');
+INSERT INTO language_mappings VALUES('ax_1','ax','fin','false');
+INSERT INTO language_mappings VALUES('cw_0','cw','pap','true');
+INSERT INTO language_mappings VALUES('cw_1','cw','nld','true');
+INSERT INTO language_mappings VALUES('cw_2','cw','eng','true');
+INSERT INTO language_mappings VALUES('cw_3','cw','spa','false');
+INSERT INTO language_mappings VALUES('ss_0','ss','eng','true');
+INSERT INTO language_mappings VALUES('sx_0','sx','nld','true');
+INSERT INTO language_mappings VALUES('sx_1','sx','eng','true');
+INSERT INTO language_mappings VALUES('sx_2','sx','spa','false');
+INSERT INTO language_mappings VALUES('sx_3','sx','pap','false');
+INSERT INTO language_mappings VALUES('sx_4','sx','fre','false');
+INSERT INTO language_mappings VALUES('mf_0','mf','eng','true');
+INSERT INTO language_mappings VALUES('mf_1','mf','cpe','false');
+
 CREATE TABLE timezone (
     country_code          char(2),
     timezone              char(50),
