@@ -1912,7 +1912,6 @@ INSERT INTO language_mappings VALUES('rs_0','rs','srp','true');
 INSERT INTO language_mappings VALUES('rs_1','rs','hun','false');
 INSERT INTO language_mappings VALUES('rs_2','rs','rom','false');
 INSERT INTO language_mappings VALUES('rs_3','rs','bos','false');
--- start from here
 INSERT INTO language_mappings VALUES('ax_0','ax','swe','true');
 INSERT INTO language_mappings VALUES('ax_1','ax','fin','false');
 INSERT INTO language_mappings VALUES('cw_0','cw','pap','true');
