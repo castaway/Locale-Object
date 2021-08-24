@@ -251,6 +251,12 @@ INSERT INTO country VALUES('zm','zmb','894','Zambia',260);
 INSERT INTO country VALUES('zr','zar','180','Zaire',243);
 INSERT INTO country VALUES('zw','zwe','716','Zimbabwe',263);
 INSERT INTO country VALUES('cd','cod','180','Congo, the Democratic Republic of the',243);
+INSERT INTO country VALUES('ax','ala','248','Aland Islands',358);
+INSERT INTO country VALUES('cw','cuw','531','Curacao',599);
+INSERT INTO country VALUES('ss','ssd','728','South Sudan',211);
+INSERT INTO country VALUES('sx','sxm','534','Sint Maarten (Dutch part)',599);
+INSERT INTO country VALUES('mf','maf','663','Saint Martin (French part)',590);
+
 CREATE TABLE continent (
     country_code char(2),
     name         char(13),
@@ -500,6 +506,13 @@ INSERT INTO continent VALUES('wf','Oceania');
 INSERT INTO continent VALUES('yt','Oceania');
 INSERT INTO continent VALUES('aq','Antarctica');
 INSERT INTO continent VALUES('cd','Africa');
+INSERT INTO continent VALUES('ax','Europe');
+INSERT INTO continent VALUES('cw','South America');
+INSERT INTO continent VALUES('ss','Africa');
+INSERT INTO continent VALUES('sx','North America');
+INSERT INTO continent VALUES('mf','North America');
+
+
 CREATE TABLE currency (
     country_code   char(2),
     name           char(100),
@@ -754,6 +767,12 @@ INSERT INTO currency VALUES('vc','dollar','XCD','951','EC$','cents',100);
 INSERT INTO currency VALUES('yt','Euro','EUR','978','null','cents',100);
 INSERT INTO currency VALUES('zr','franc','XAF','950','CFAF','centimes',100);
 INSERT INTO currency VALUES('cd','franc','CDF','180','CFAF','centimes',100);
+INSERT INTO currency VALUES('ax','Euro','EUR','248','€','cents',100);
+INSERT INTO currency VALUES('cw','guilder','ANG','531','NAf','cents',100);
+INSERT INTO currency VALUES('ss','pound','SSP','728','SS£','piasters',100);
+INSERT INTO currency VALUES('sx','guilder','ANG','534','NAf','cents',100);
+INSERT INTO currency VALUES('mf','Euro','EUR','663','€','cents',100);
+
 CREATE TABLE language (
     code_alpha2  char(2),
     code_alpha3  char(3),
@@ -1893,6 +1912,21 @@ INSERT INTO language_mappings VALUES('rs_0','rs','srp','true');
 INSERT INTO language_mappings VALUES('rs_1','rs','hun','false');
 INSERT INTO language_mappings VALUES('rs_2','rs','rom','false');
 INSERT INTO language_mappings VALUES('rs_3','rs','bos','false');
+INSERT INTO language_mappings VALUES('ax_0','ax','swe','true');
+INSERT INTO language_mappings VALUES('ax_1','ax','fin','false');
+INSERT INTO language_mappings VALUES('cw_0','cw','pap','true');
+INSERT INTO language_mappings VALUES('cw_1','cw','nld','true');
+INSERT INTO language_mappings VALUES('cw_2','cw','eng','true');
+INSERT INTO language_mappings VALUES('cw_3','cw','spa','false');
+INSERT INTO language_mappings VALUES('ss_0','ss','eng','true');
+INSERT INTO language_mappings VALUES('sx_0','sx','nld','true');
+INSERT INTO language_mappings VALUES('sx_1','sx','eng','true');
+INSERT INTO language_mappings VALUES('sx_2','sx','spa','false');
+INSERT INTO language_mappings VALUES('sx_3','sx','pap','false');
+INSERT INTO language_mappings VALUES('sx_4','sx','fre','false');
+INSERT INTO language_mappings VALUES('mf_0','mf','eng','true');
+INSERT INTO language_mappings VALUES('mf_1','mf','cpe','false');
+
 CREATE TABLE timezone (
     country_code          char(2),
     timezone              char(50),
@@ -2254,4 +2288,10 @@ INSERT INTO timezone VALUES('mn','Asia/Ulaanbaatar','true');
 INSERT INTO timezone VALUES('um','Pacific/Johnston','false');
 INSERT INTO timezone VALUES('um','Pacific/Midway','true');
 INSERT INTO timezone VALUES('um','Pacific/Wake','false');
+INSERT INTO timezone VALUES('mf','America/Marigot','true');
+INSERT INTO timezone VALUES('sx','America/Lower_Princes','true');
+INSERT INTO timezone VALUES('ss','Africa/Juba','true');
+INSERT INTO timezone VALUES('cw','America/Curacao','true')
+INSERT INTO timezone VALUES('ax','Europe/Mariehamn','true');
+
 COMMIT;
