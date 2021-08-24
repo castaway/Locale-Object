@@ -2291,7 +2291,7 @@ INSERT INTO timezone VALUES('um','Pacific/Wake','false');
 INSERT INTO timezone VALUES('mf','America/Marigot','true');
 INSERT INTO timezone VALUES('sx','America/Lower_Princes','true');
 INSERT INTO timezone VALUES('ss','Africa/Juba','true');
-INSERT INTO timezone VALUES('cw','America/Curacao','true')
+INSERT INTO timezone VALUES('cw','America/Curacao','true');
 INSERT INTO timezone VALUES('ax','Europe/Mariehamn','true');
 
 COMMIT;
